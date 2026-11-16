@@ -6,7 +6,7 @@
 <title>Estúdio Rumo do Dia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Instrument+Serif:ital@0;1&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Young+Serif&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Instrument+Serif:ital@0;1&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Young+Serif&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   /* Estúdio claro e neutro: a prévia do post manda, os controles ficam em volta. Uma coluna no celular, duas no desktop. */
@@ -165,6 +165,7 @@ video{width:100%;max-width:300px;border-radius:10px;background:#000;display:bloc
 
     <section class="box" aria-labelledby="h-visual">
       <h2 id="h-visual">Visual</h2>
+      <div><span class="lbl">Modelo</span><div class="chips" id="templates" role="group" aria-label="Modelo"></div></div>
       <div><span class="lbl">Fonte</span><div class="chips" id="fonts" role="group" aria-label="Fonte"></div></div>
       <div><span class="lbl">Fundo</span><div class="chips" id="bgs" role="group" aria-label="Fundo"></div></div>
       <div><span class="lbl">Marca-texto</span><div class="chips" id="marks" role="group" aria-label="Cor do marca-texto"></div></div>
@@ -420,6 +421,7 @@ const FORMATS = [
   {id:"stories", name:"Stories", w:1080, h:1920}
 ];
 const ALIGNS = [{id:"left", name:"Esquerda"},{id:"center", name:"Centro"}];
+const TEMPLATES = [{id:"marcador", name:"Marca-texto"},{id:"bloco", name:"Bloco (itálico)"}];
 
 const MONTHS = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
 const MON3 = ["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"];
@@ -433,11 +435,11 @@ const state = {
   date: new Date(today), cat: WEEKDAY_CAT[today.getDay()],
   text:"", author:"", edited:false,
   font:"instrument", bg:"preto", mark:"lima", format:"feed", align:"left",
-  size:160, showDate:true, dateStyle:"a", handle:"@rumododia", caption:"",
+  size:160, template:"marcador", showDate:true, dateStyle:"a", handle:"@rumododia", caption:"",
   weights:{fe:2, motivacao:2, conquista:2, trabalho:2, familia:1, amor:1, filosofia:1, gratidao:1, confianca:1, inspiracao:1},
   alternate:true
 };
-const SAVED_KEYS = ["font","bg","mark","format","align","size","showDate","dateStyle","handle","weights","alternate"];
+const SAVED_KEYS = ["template","font","bg","mark","format","align","size","showDate","dateStyle","handle","weights","alternate"];
 try{
   const s = JSON.parse(localStorage.getItem("rumododia.v3")||"{}");
   SAVED_KEYS.forEach(k=>{ if(s[k]!==undefined) state[k]=s[k]; });
@@ -483,7 +485,8 @@ function ensureFont(f){
   if(!fontCache[f.id]){
     const q = n => document.fonts.load(n).catch(()=>null);
     fontCache[f.id] = Promise.all([
-      q(f.w+' 100px "'+f.fam+'"'), q('400 100px "'+f.fam+'"'), q('italic 400 100px "'+f.fam+'"')
+      q(f.w+' 100px "'+f.fam+'"'), q('400 100px "'+f.fam+'"'), q('italic 400 100px "'+f.fam+'"'),
+      q('600 100px "Newsreader"'), q('italic 600 100px "Newsreader"'), q('400 100px "Instrument Serif"'), q('italic 400 100px "Instrument Serif"')
     ]);
   }
   return fontCache[f.id];
@@ -570,6 +573,77 @@ function drawMark(cx, base, fs, ink, accent){
   ctx.save(); ctx.translate(bx,bottom-bh); ctx.scale(sc,sc); ctx.fillStyle=accent; ctx.fill(BOOK_PATH); ctx.restore();
 }
 
+/* ---------- Modelo "bloco": texto centralizado, linhas esticadas, destaques em itálico ---------- */
+const BLOCO_FAM = '"Newsreader", Georgia, serif';
+function blocoFont(size, italic){ ctx.font=(italic?"italic ":"")+"600 "+size+"px "+BLOCO_FAM; if(hasTracking) ctx.letterSpacing=(-0.035*size)+"px"; }
+function drawBloco(S, A, bg, mk, W, H){
+  const cl = v => Math.max(0, Math.min(1, v));
+  const paras = parseRich(S.text||" ");
+  const words = []; paras.forEach((p,pi)=>{ p.forEach(w=>words.push({t:w.segs.map(s=>s.t).join(""), it:w.segs.some(s=>s.hl), br:false})); if(words.length) words[words.length-1].br = pi<paras.length-1; });
+  const maxW = W*0.78;
+  const measure = (w, size)=>{ blocoFont(size, w.it); return mw(w.t); };
+  let fs0 = W*0.12, lines, total;
+  for(let iter=0; iter<30; iter++){
+    lines=[]; let cur=[], cw=0;
+    blocoFont(fs0,false); const sp = mw(" ");
+    words.forEach(w=>{
+      const ww = measure(w, fs0);
+      if(cur.length && cw + sp + ww > maxW*0.8){ lines.push(cur); cur=[]; cw=0; }
+      cur.push(w); cw += (cur.length>1?sp:0) + ww;
+      if(w.br){ lines.push(cur); cur=[]; cw=0; }
+    });
+    if(cur.length) lines.push(cur);
+    lines = lines.map(ln=>{
+      blocoFont(fs0,false); const sp2=mw(" ");
+      const w0 = ln.reduce((a,w,i)=>a+measure(w,fs0)+(i?sp2:0),0);
+      const s = Math.max(0.8, Math.min(1.5, maxW/w0));
+      return {words:ln, fs: fs0*s};
+    });
+    total = lines.reduce((a,l)=>a+l.fs*0.92,0);
+    if(total <= H*0.56) break;
+    fs0 *= 0.93;
+  }
+  const dateFs = Math.round(W*0.06);
+  const hasDate = S.showDate;
+  const author = (S.author||"").trim(), handle=(S.handle||"").trim();
+  let blockH = total + (hasDate? dateFs*1.6 : 0) + (author? W*0.06:0) + W*0.05;
+  let y = (H-blockH)/2 - (A? H*0.02:0);
+  const nL = lines.length;
+  const tL = i => 0.5 + i*0.32;
+  const TT = tL(nL) + 0.3, TK = TT + 0.8;
+  draw.duration = TK + 3.4;
+  const t = A ? A.t : 1e9;
+  const ease3 = x=>1-Math.pow(1-x,3);
+  const pIn=(s,d)=>ease3(cl((t-s)/d));
+  if(A){ const z=1+0.035*cl(t/draw.duration); ctx.translate(W/2,H/2); ctx.scale(z,z); ctx.translate(-W/2,-H/2); }
+  ctx.textBaseline="alphabetic";
+  if(hasDate){
+    const p=pIn(0.05,0.7);
+    const d=S.date, txt=String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0");
+    blocoFont(dateFs,false); ctx.fillStyle=bg.ink; ctx.globalAlpha=p;
+    ctx.fillText(txt,(W-mw(txt))/2,y+dateFs+(1-p)*14); ctx.globalAlpha=1;
+    y += dateFs*1.6;
+  }
+  lines.forEach((ln,i)=>{
+    const fs=ln.fs; blocoFont(fs,false); const sp=mw(" ");
+    const widths = ln.words.map(w=>measure(w,fs));
+    const lw = widths.reduce((a,b)=>a+b,0) + sp*(ln.words.length-1);
+    let x=(W-lw)/2; const base = y + fs*0.78;
+    const p = A ? pIn(tL(i),0.7) : 1;
+    ctx.globalAlpha=p; ctx.fillStyle=bg.ink;
+    ln.words.forEach((w,j)=>{ blocoFont(fs,w.it); ctx.fillText(w.t,x,base+(1-p)*fs*0.25); x+=widths[j]+sp; });
+    ctx.globalAlpha=1;
+    y += fs*0.92;
+  });
+  const pt = A ? pIn(TT,0.7) : 1;
+  ctx.globalAlpha=pt;
+  if(author){ const tx="— "+author; ctx.font='italic 400 '+Math.round(W*0.034)+'px '+BLOCO_FAM; if(hasTracking) ctx.letterSpacing="0px"; ctx.fillStyle=bg.muted; ctx.fillText(tx,(W-mw(tx))/2,y+W*0.05); y+=W*0.06; }
+  if(handle){ ctx.font='400 '+Math.round(W*0.03)+'px '+BLOCO_FAM; if(hasTracking) ctx.letterSpacing="0px"; ctx.fillStyle=bg.ink; ctx.fillText(handle,(W-mw(handle))/2,y+W*0.045); }
+  ctx.globalAlpha=1;
+  if(A){ const pk=pIn(TK,0.9); if(pk>0){ ctx.globalAlpha=pk; drawMark(W/2, H*0.875+(1-pk)*16, 96, bg.ink, bg.id==="preto"?mk.c:"#7FA300"); ctx.globalAlpha=1; } }
+  ctx.setTransform(1,0,0,1,0,0);
+}
+
 function draw(P, anim){
   const S = P ? Object.assign({}, state, P) : state;
   const A = anim || null;
@@ -583,6 +657,7 @@ function draw(P, anim){
   ctx.setTransform(1,0,0,1,0,0); ctx.globalAlpha=1;
   ctx.fillStyle=bg.bg; ctx.fillRect(0,0,W,H);
   ctx.textBaseline="alphabetic";
+  if(S.template==="bloco"){ drawBloco(S, A, bg, mk, W, H); return; }
 
   /* layout */
   const mx = W*0.13, maxW = W-2*mx;
@@ -816,6 +891,7 @@ function initUI(){
   chipGroup($("marks"), MARKS, "mark", (b,it)=>{ b.innerHTML='<span class="sw" style="background:'+it.c+'"></span>'+it.name; });
   chipGroup($("formats"), FORMATS, "format", (b,it)=>b.textContent=it.name);
   chipGroup($("aligns"), ALIGNS, "align", (b,it)=>b.textContent=it.name);
+  chipGroup($("templates"), TEMPLATES, "template", (b,it)=>b.textContent=it.name);
 
   $("date").value = isoOf(state.date);
   $("date").addEventListener("change", e=>{ const d=parseIso(e.target.value); if(d) changeDate(d); });

@@ -26,29 +26,31 @@ async ({start, n, pesos, frases, slots}) => {
   const S = slots.length;
   const cats = R.assignThemes(S*n, seed);   // S publicações por dia, temas diferentes
   const used = {}; const items = [];
+  // visual alterna a cada publicação para o feed não ficar igual
+  const VIS = [["marcador","preto"],["bloco","branco"],["marcador","branco"],["bloco","preto"]];
   for (let i=0;i<S*n;i++){
     const date = new Date(y, m-1, d+Math.floor(i/S)); date.setHours(0,0,0,0);
     const cat = cats[i];
     const k = (used[cat]=(used[cat]||0)+1)-1;
     const turno = slots[i%S][0], kind = slots[i%S][1]==="reels" ? "reel" : "static", iso = R.isoOf(date);
     const fixa = frases && frases._datas && frases._datas[iso] && frases._datas[iso][turno];
-    if (fixa) { used[cat]--; items.push({iso, cat: fixa[2]||cat, text:fixa[0], author:fixa[1]||"", kind, turno}); continue; }
+    if (fixa) { used[cat]--; items.push({iso, cat: fixa[2]||cat, text:fixa[0], author:fixa[1]||"", kind, turno, template:VIS[i%4][0], bg:VIS[i%4][1]}); continue; }
     const novas = (frases && frases[cat]) || [];
     const p = k < novas.length ? novas[k] : R.BANK[cat][(seed*7+k) % R.BANK[cat].length];
-    items.push({iso, cat, text:p[0], author:p[1]||"", kind, turno});
+    items.push({iso, cat, text:p[0], author:p[1]||"", kind, turno, template:VIS[i%4][0], bg:VIS[i%4][1]});
   }
   return items;
 }"""
 JS_STATIC = r"""
 async (it) => {
   const R = window.__rumo; const [y,m,d] = it.iso.split('-').map(Number);
-  const S = {date:new Date(y,m-1,d), cat:it.cat, text:it.text, author:it.author};
+  const S = {date:new Date(y,m-1,d), cat:it.cat, text:it.text, author:it.author, template:it.template, bg:it.bg};
   R.draw(S); return {img: R.cv.toDataURL('image/jpeg', 0.93), cap: R.captionFor(S)};
 }"""
 JS_REEL = r"""
 async (it) => {
   const R = window.__rumo; const [y,m,d] = it.iso.split('-').map(Number);
-  const S = {date:new Date(y,m-1,d), cat:it.cat, text:it.text, author:it.author};
+  const S = {date:new Date(y,m-1,d), cat:it.cat, text:it.text, author:it.author, template:it.template, bg:it.bg};
   const r = await R.recordReel(S); const dur = R.draw.duration;
   R.draw(S, {t:1e6}); const cover = R.cv.toDataURL('image/jpeg', 0.92);
   const u8 = new Uint8Array(await r.blob.arrayBuffer()); let bin='';
@@ -58,6 +60,8 @@ async (it) => {
 FONT_CSS = f"""
 @font-face{{font-family:"Instrument Serif";font-style:normal;font-weight:400;src:url(file://{FER}/fontes/InstrumentSerif-Regular.ttf)}}
 @font-face{{font-family:"Instrument Serif";font-style:italic;font-weight:400;src:url(file://{FER}/fontes/InstrumentSerif-Italic.ttf)}}
+@font-face{{font-family:"Newsreader";font-weight:200 800;src:url(file://{FER}/fontes/Newsreader.ttf)}}
+@font-face{{font-family:"Newsreader";font-style:italic;font-weight:200 800;src:url(file://{FER}/fontes/Newsreader-Italic.ttf)}}
 """
 async def main():
     async with async_playwright() as p:
@@ -65,7 +69,7 @@ async def main():
         pg = await b.new_page(viewport={"width":1200,"height":900})
         await pg.goto(f"file://{FER}/estudio.html")
         await pg.add_style_tag(content=FONT_CSS)
-        await pg.evaluate("Promise.all([document.fonts.load('400 100px \"Instrument Serif\"'),document.fonts.load('italic 400 100px \"Instrument Serif\"')])")
+        await pg.evaluate("Promise.all([document.fonts.load('400 100px \"Instrument Serif\"'),document.fonts.load('italic 400 100px \"Instrument Serif\"'),document.fonts.load('600 100px \"Newsreader\"'),document.fonts.load('italic 600 100px \"Newsreader\"')])")
         assert await pg.evaluate("document.fonts.check('400 100px \"Instrument Serif\"')"), "fonte não carregou"
         items = await pg.evaluate(JS_ITEMS, {"start":start, "n":n, "pesos":pesos, "frases":frases, "slots":[list(x) for x in SLOTS]})
         novos = []
@@ -74,7 +78,7 @@ async def main():
             if it["kind"]=="static":
                 r = await pg.evaluate(JS_STATIC, it)
                 (mes_dir/f"{it['iso']}-{it['turno']}-post.jpg").write_bytes(base64.b64decode(r["img"].split(",")[1]))
-                novos.append({"data":it["iso"],"turno":it["turno"],"tipo":"post","tema":it["cat"],"arquivo":f"{start[:7]}/{it['iso']}-{it['turno']}-post.jpg","legenda":r["cap"],"publicado":False})
+                novos.append({"data":it["iso"],"turno":it["turno"],"tipo":"post","tema":it["cat"],"modelo":f"{it['template']}-{it['bg']}","arquivo":f"{start[:7]}/{it['iso']}-{it['turno']}-post.jpg","legenda":r["cap"],"publicado":False})
             else:
                 r = await pg.evaluate(JS_REEL, it)
                 raw = mes_dir/f"{it['iso']}-{it['turno']}-raw.{r['ext']}"; raw.write_bytes(base64.b64decode(r["vid"]))
@@ -84,7 +88,7 @@ async def main():
                     "-c:a","aac","-b:a","128k","-movflags","+faststart",str(mp4)], check=True)
                 raw.unlink()
                 (mes_dir/f"{it['iso']}-{it['turno']}-reels-capa.jpg").write_bytes(base64.b64decode(r["cover"].split(",")[1]))
-                novos.append({"data":it["iso"],"turno":it["turno"],"tipo":"reels","tema":it["cat"],"arquivo":f"{start[:7]}/{it['iso']}-{it['turno']}-reels.mp4",
+                novos.append({"data":it["iso"],"turno":it["turno"],"tipo":"reels","tema":it["cat"],"modelo":f"{it['template']}-{it['bg']}","arquivo":f"{start[:7]}/{it['iso']}-{it['turno']}-reels.mp4",
                     "capa":f"{start[:7]}/{it['iso']}-{it['turno']}-reels-capa.jpg","thumb_offset_ms":int((r["dur"]-1)*1000),"legenda":r["cap"],"publicado":False})
             print(it["iso"], it["kind"], it["cat"], flush=True)
         await b.close()
