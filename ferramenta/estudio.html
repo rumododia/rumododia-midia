@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estúdio Rumo do Dia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Instrument+Serif:ital@0;1&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Young+Serif&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Estúdio claro e neutro: a prévia do post manda, os controles ficam em volta. Uma coluna no celular, duas no desktop. */
+  --paper:#F5F5F1;
+  --card:#FFFFFF;
+  --ink:#121211;
+  --muted:#6C6C66;
+  --line:#E2E2DC;
+  --mark:#D4FF3A;
+  --font-display:"Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:20px 16px 8px;max-width:1120px;margin:0 auto}
+header h1{font-family:var(--font-display);font-weight:400;font-size:32px;letter-spacing:-.01em;margin:0}
+header h1 .dot{color:#9DBF1A}
+header p{margin:0;color:var(--muted);font-size:13px}
+
+main{max-width:1120px;margin:0 auto;padding:8px 16px 48px;display:grid;gap:20px;grid-template-columns:1fr}
+@media (min-width:880px){
+  main{grid-template-columns:minmax(0,460px) minmax(0,1fr);align-items:start}
+  .stage{position:sticky;top:16px}
+}
+
+.stage{display:flex;flex-direction:column;gap:12px}
+.preview{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;justify-content:center}
+.preview img{display:block;width:100%;max-width:440px;height:auto;border-radius:6px;box-shadow:0 1px 0 var(--line),0 10px 30px -18px rgba(0,0,0,.35);-webkit-touch-callout:default}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{appearance:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:9px 14px;font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink);flex:1;justify-content:center;padding:12px 16px;font-size:15px}
+.btn.mark{background:var(--mark);border-color:#cfe23a}
+.hint{font-size:12.5px;color:var(--muted);margin:0}
+.status{font-size:13px;min-height:1.2em;margin:0}
+
+.panel{display:flex;flex-direction:column;gap:14px}
+section.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:12px}
+section.box h2{margin:0;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+[hidden]{display:none!important}
+.lbl{font-size:13px;font-weight:600;display:block;margin-bottom:6px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+input[type=text],input[type=date],textarea,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff}
+textarea{resize:vertical;min-height:96px;line-height:1.4}
+#phrase{font-family:var(--font-display);font-size:22px;font-weight:400}
+
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{appearance:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px;font-size:13.5px;font-weight:500;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip.font{font-size:17px;padding:6px 14px}
+.chip .sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:6px;border:1px solid rgba(0,0,0,.15)}
+
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.day{appearance:none;border:1px solid var(--line);background:#fff;border-radius:10px;padding:6px 0;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.15}
+.day small{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.day b{font-size:17px;font-variant-numeric:tabular-nums}
+.day[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.day[aria-pressed="true"] small{color:#d8d8d2}
+.theme-of-day{font-size:13px;color:var(--muted)}
+.theme-of-day b{color:var(--ink);background:var(--mark);padding:0 4px;border-radius:4px}
+
+input[type=range]{width:100%;accent-color:var(--ink)}
+.toggle{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.toggle input{width:18px;height:18px;accent-color:var(--ink)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:420px){.two{grid-template-columns:1fr}}
+#caption{min-height:150px;font-size:14px}
+canvas{display:none}
+.month{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.mday{border:1px solid var(--line);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:6px;background:#fff}
+.mday img{width:100%;height:auto;border-radius:6px;display:block;background:#eee;aspect-ratio:4/5;object-fit:cover}
+.mday img.tall{aspect-ratio:9/16}
+.mday .d{font-size:12px;font-weight:600}
+.mday .c{font-size:11.5px;color:var(--muted)}
+.mday .r{display:flex;gap:4px;flex-wrap:wrap}
+.mday .r button{font-size:12px;padding:5px 9px}
+.mday.on{outline:2px solid var(--ink)}
+video{width:100%;max-width:300px;border-radius:10px;background:#000;display:block}
+.progress{font-size:13px;color:var(--muted)}
+.weights{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.wrow{display:flex;align-items:center;justify-content:space-between;gap:6px;border:1px solid var(--line);border-radius:10px;padding:4px 6px 4px 10px;background:#fff;font-size:13.5px}
+.wrow .ctl{display:flex;align-items:center;gap:4px}
+.wrow button{appearance:none;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:16px;line-height:1;cursor:pointer}
+.wrow b{min-width:14px;text-align:center;font-variant-numeric:tabular-nums}
+.badge{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:2px 7px;background:#eee;color:var(--ink)}
+.badge.reel{background:var(--mark)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>rumo do dia<span class="dot">.</span></h1>
+    <p>Estúdio de posts de frases diárias</p>
+  </div>
+  <p id="handleTag">@rumododia</p>
+</header>
+
+<main>
+  <div class="stage">
+    <div class="preview"><img id="preview" alt="Prévia do post"></div>
+    <div class="actions">
+      <button class="btn primary" id="saveBtn" type="button">Salvar imagem</button>
+    </div>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+    <p class="hint" id="saveHint">Se o botão não abrir o salvamento, toque e segure a imagem para salvar nas Fotos.</p>
+  </div>
+
+  <div class="panel">
+    <section class="box" aria-labelledby="h-dia">
+      <h2 id="h-dia">Dia</h2>
+      <div class="week" id="week"></div>
+      <div class="two">
+        <div class="field">
+          <label class="lbl" for="date">Data do post</label>
+          <input type="date" id="date">
+        </div>
+        <div class="field">
+          <label class="lbl" for="dateStyle">Como a data aparece</label>
+          <select id="dateStyle">
+            <option value="a">15 de novembro, domingo</option>
+            <option value="b">domingo, 15 de novembro</option>
+            <option value="c">DOMINGO · 15 NOV</option>
+          </select>
+        </div>
+      </div>
+      <label class="toggle"><input type="checkbox" id="showDate" checked> Mostrar a data no post</label>
+      <p class="theme-of-day" id="themeOfDay"></p>
+    </section>
+
+    <section class="box" aria-labelledby="h-frase">
+      <h2 id="h-frase">Frase</h2>
+      <div class="chips" id="cats" role="group" aria-label="Tema"></div>
+      <div class="field">
+        <label class="lbl" for="phrase">Texto</label>
+        <textarea id="phrase" rows="3"></textarea>
+        <p class="hint">Coloque *asteriscos* em volta das palavras que vão no marca-texto. Enter quebra a linha.</p>
+      </div>
+      <div class="field">
+        <label class="lbl" for="author">Autor ou versículo (opcional)</label>
+        <input type="text" id="author" placeholder="ex.: Sêneca, Salmos 23:1">
+      </div>
+      <div class="row">
+        <button class="btn" type="button" id="dayBtn">Frase do dia</button>
+        <button class="btn" type="button" id="shuffleBtn">Sortear outra</button>
+        <button class="btn mark" type="button" id="aiBtn" hidden>Criar frase nova com IA</button>
+      </div>
+    </section>
+
+    <section class="box" aria-labelledby="h-visual">
+      <h2 id="h-visual">Visual</h2>
+      <div><span class="lbl">Fonte</span><div class="chips" id="fonts" role="group" aria-label="Fonte"></div></div>
+      <div><span class="lbl">Fundo</span><div class="chips" id="bgs" role="group" aria-label="Fundo"></div></div>
+      <div><span class="lbl">Marca-texto</span><div class="chips" id="marks" role="group" aria-label="Cor do marca-texto"></div></div>
+      <div><span class="lbl">Formato</span><div class="chips" id="formats" role="group" aria-label="Formato"></div></div>
+      <div><span class="lbl">Alinhamento</span><div class="chips" id="aligns" role="group" aria-label="Alinhamento"></div></div>
+      <div class="field">
+        <label class="lbl" for="size">Tamanho máximo do texto</label>
+        <input type="range" id="size" min="70" max="200" step="2" value="160">
+      </div>
+      <div class="field">
+        <label class="lbl" for="handle">Seu @</label>
+        <input type="text" id="handle" value="@rumododia">
+      </div>
+    </section>
+
+    <section class="box" aria-labelledby="h-leg">
+      <h2 id="h-leg">Legenda</h2>
+      <textarea id="caption"></textarea>
+      <div class="row"><button class="btn" type="button" id="copyBtn">Copiar legenda</button></div>
+    </section>
+
+    <section class="box" aria-labelledby="h-reels">
+      <h2 id="h-reels">Reels</h2>
+      <p class="hint">Transforma o post atual num vídeo 9:16: as palavras sobem suavemente, o marca-texto passa trecho por trecho e no fim entra a marca. A música você coloca no próprio Instagram.</p>
+      <div class="row">
+        <button class="btn mark" type="button" id="reelBtn">Gerar reels deste post</button>
+        <button class="btn" type="button" id="reelSave" hidden>Salvar vídeo</button>
+      </div>
+      <p class="progress" id="reelStatus" role="status" aria-live="polite"></p>
+      <video id="reelVideo" controls playsinline muted hidden></video>
+    </section>
+
+    <section class="box" aria-labelledby="h-mes">
+      <h2 id="h-mes">Mês inteiro</h2>
+      <p class="hint">Um conteúdo por dia, com os temas misturados ao longo do mês e sem repetir tema em dias seguidos. Toque em Editar para trocar a frase de um dia: o que você mudar lá em cima fica salvo nesse dia.</p>
+      <div class="field">
+        <span class="lbl">Mistura de temas</span>
+        <p class="hint">Quanto maior o peso, mais vezes o tema aparece no mês. Zero tira o tema. São esses pesos que a gente vai ajustar pelo que mais engajar no Instagram.</p>
+        <div class="weights" id="weights"></div>
+      </div>
+      <label class="toggle"><input type="checkbox" id="alternate"> Alternar post estático e reels (metade de cada)</label>
+      <div class="two">
+        <div class="field">
+          <label class="lbl" for="month">Mês</label>
+          <input type="month" id="month">
+        </div>
+        <div class="field" style="justify-content:flex-end">
+          <button class="btn primary" type="button" id="monthBtn">Gerar o mês</button>
+        </div>
+      </div>
+      <p class="progress" id="monthStatus" role="status" aria-live="polite"></p>
+      <p class="hint" id="monthMix"></p>
+      <div class="month" id="monthGrid"></div>
+      <div class="row" id="monthActions" hidden>
+        <button class="btn mark" type="button" id="zipBtn">Baixar o mês (ZIP)</button>
+        <button class="btn" type="button" id="oneByOne">Salvar um por um</button>
+        <button class="btn" type="button" id="capsBtn">Copiar todas as legendas</button>
+      </div>
+      <p class="hint" id="zipHint" hidden>O ZIP traz as imagens, os vídeos dos reels e um arquivo com as legendas. Os reels são gravados na hora, uns 10 segundos cada: deixe a tela aberta até terminar. No iPhone, abra o ZIP no app Arquivos, toque para descompactar, selecione tudo e use Compartilhar › Salvar.</p>
+    </section>
+  </div>
+</main>
+<canvas id="cv"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ---------- Banco de frases ---------- */
+const CATS = [
+  {id:"fe", label:"Fé", tag:"fe"},
+  {id:"trabalho", label:"Trabalho", tag:"trabalho"},
+  {id:"motivacao", label:"Motivação", tag:"motivacao"},
+  {id:"filosofia", label:"Filosofia", tag:"filosofia"},
+  {id:"familia", label:"Família", tag:"familia"},
+  {id:"conquista", label:"Conquista", tag:"conquista"},
+  {id:"amor", label:"Amor", tag:"amor"},
+  {id:"gratidao", label:"Gratidão", tag:"gratidao"},
+  {id:"confianca", label:"Confiança", tag:"confianca"},
+  {id:"inspiracao", label:"Inspiração", tag:"inspiracao"}
+];
+/* domingo..sábado */
+const WEEKDAY_CAT = ["fe","trabalho","motivacao","filosofia","familia","conquista","amor"];
+
+const BANK = {
+  fe:[
+    ["Deus não te trouxe até *aqui* para te deixar no *meio do caminho*.",""],
+    ["Antes de *tudo*, entrega o teu dia nas mãos de *Deus*.",""],
+    ["O que é *teu* chega no tempo *certo*. Confia no tempo de Deus.",""],
+    ["Tudo posso naquele que me *fortalece*.","Filipenses 4:13"],
+    ["O Senhor é o meu pastor; *nada* me faltará.","Salmos 23:1"],
+    ["O choro pode durar uma noite, mas a *alegria* vem pela *manhã*.","Salmos 30:5"],
+    ["Entrega o teu caminho ao Senhor; *confia* nele, e ele tudo *fará*.","Salmos 37:5"],
+    ["Quando eu não *entendo*, eu *confio*.",""],
+    ["Ore *mais*, se preocupe *menos*.",""],
+    ["Nem sempre Deus muda a *situação*, mas Ele sempre muda o *coração*.",""],
+    ["Senhor, que os meus passos sigam a Tua *vontade* hoje.",""],
+    ["Sua fé é maior do que o seu *medo*. Lembre disso *hoje*.",""]
+  ],
+  trabalho:[
+    ["O trabalho *bem feito* fala por você quando você não está na *sala*.",""],
+    ["*Disciplina* é fazer o que precisa ser feito, mesmo sem *vontade*.",""],
+    ["Ninguém vê o *esforço*, todo mundo vê o *resultado*. Continue.",""],
+    ["Faça hoje o que o seu *eu do futuro* vai *agradecer*.",""],
+    ["*Honestidade* no trabalho é o que constrói um *nome*.",""],
+    ["Não existe trabalho pequeno quando é feito com *excelência*.",""],
+    ["O começo é *humilde*, mas o caminho é *seu*.",""],
+    ["Cada dia é uma nova *chance* de fazer *melhor*.",""],
+    ["Quem *planta* com constância *colhe* com fartura.",""],
+    ["Seu *suor* de hoje é a *paz* de amanhã.",""]
+  ],
+  motivacao:[
+    ["Um passo por *dia* ainda é *avançar*.",""],
+    ["Você não precisa ser *perfeito*, só precisa *começar*.",""],
+    ["Não desista no *capítulo* difícil. A história ainda é *sua*.",""],
+    ["Respira. Você já passou por *coisas piores* e ainda está *aqui*.",""],
+    ["Devagar também se *chega*. O importante é não *parar*.",""],
+    ["O *cansaço* é real, mas o seu *propósito* é maior.",""],
+    ["Hoje é um bom dia para *recomeçar*.",""],
+    ["Seja a pessoa que você *precisava* ter por perto.",""],
+    ["O que é *difícil* hoje vai virar *história* amanhã.",""],
+    ["Coragem não é não ter *medo*. É ir *mesmo assim*.",""]
+  ],
+  filosofia:[
+    ["Enquanto *adiamos*, a vida *passa*.","Sêneca"],
+    ["Não é que tenhamos *pouco tempo*, é que *perdemos* muito.","Sêneca"],
+    ["Sofremos mais na *imaginação* do que na *realidade*.","Sêneca"],
+    ["A melhor *vingança* é não ser como quem te *feriu*.","Marco Aurélio"],
+    ["Não são as coisas que nos *perturbam*, mas a *opinião* que temos delas.","Epicteto"],
+    ["Ninguém se banha duas vezes no *mesmo rio*.","Heráclito"],
+    ["Uma vida sem *reflexão* não vale a pena ser *vivida*.","Sócrates"],
+    ["Uma jornada de mil léguas começa com um *único passo*.","Lao-Tsé"],
+    ["A vida só pode ser compreendida olhando para *trás*, mas só pode ser vivida olhando para a *frente*.","Kierkegaard"],
+    ["Quem tem um *porquê* para viver suporta quase qualquer *como*.","Nietzsche"],
+    ["Quando não podemos mais mudar uma situação, somos desafiados a mudar a *nós mesmos*.","Viktor Frankl"]
+  ],
+  familia:[
+    ["Família é onde a vida *começa* e o amor *nunca termina*.",""],
+    ["Casa cheia de *gente que ama* é a maior *riqueza* que existe.",""],
+    ["Abrace os seus *hoje*. O tempo não *espera*.",""],
+    ["Mesa simples, *coração cheio*. Isso é *família*.",""],
+    ["Os pais *plantam* em silêncio o que os filhos *colhem* a vida inteira.",""],
+    ["Nada substitui o *colo* de mãe e o *conselho* de pai.",""],
+    ["Ligue para quem você *ama*. Um minuto seu pode ser o *melhor* do dia de alguém.",""],
+    ["Família não é perfeita. É a *escolha* de ficar, *todos os dias*.",""],
+    ["Que a nossa casa seja *abrigo*, nunca *campo de batalha*.",""],
+    ["Tem *amor* que a gente só entende quando vira *pai* ou *mãe*.",""]
+  ],
+  conquista:[
+    ["Toda conquista começou com a *decisão* de tentar.",""],
+    ["Comemore as *pequenas vitórias*. Elas constroem as *grandes*.",""],
+    ["O que hoje é *sonho*, amanhã é *lembrança* de quando tudo começou.",""],
+    ["Ninguém viu as *noites* em claro, mas todos vão ver a *vitória*.",""],
+    ["Conquista de verdade é a que vem com a *consciência* em paz.",""],
+    ["Você não chegou até aqui por *sorte*. Foi *fé* e *trabalho*.",""],
+    ["Cada *não* que você ouviu te deixou mais perto do *sim*.",""],
+    ["O topo é bonito, mas foi a *subida* que te *formou*.",""],
+    ["De *cabeça erguida*, tudo que é seu vai *chegar*.",""],
+    ["Celebre o caminho, não só a *chegada*.",""]
+  ],
+  amor:[
+    ["Amor é *cuidado* nos detalhes, todos os *dias*.",""],
+    ["Quem ama de *verdade* não te faz *duvidar*.",""],
+    ["Amor não é encontrar alguém perfeito, é *escolher* a mesma pessoa *todo dia*.",""],
+    ["Que a gente nunca perca o *costume* de se *admirar*.",""],
+    ["Amar é *ficar*, mesmo quando seria mais fácil *ir*.",""],
+    ["Ame quem te *acalma*, não quem te *confunde*.",""],
+    ["O amor *paciente* é o que mais *dura*.",""],
+    ["Que o nosso amor seja *casa*, e não *tempestade*.",""],
+    ["Ninguém completa ninguém. Mas tem gente que *transborda* a gente.",""],
+    ["O amor mais bonito é o que tem *Deus* no meio.",""]
+  ],
+  gratidao:[
+    ["*Obrigado*, Deus, pelo que eu tenho e pelo que *ainda vem*.",""],
+    ["Gratidão transforma o *pouco* em *suficiente*.",""],
+    ["Acordar já é um *presente*. Agradeça antes de *pedir*.",""],
+    ["Quem agradece pelo *hoje* tem mais *paz* com o amanhã.",""],
+    ["Olhe para trás e veja quanto você já *venceu*.",""],
+    ["Tem dia que a gente só precisa *agradecer* e *descansar*.",""],
+    ["Um coração *grato* enxerga *milagres* nas coisas simples.",""],
+    ["Gratidão por quem *ficou* nos dias difíceis.",""]
+  ],
+  confianca:[
+    ["Confie no *processo*. Nem tudo que demora está *parado*.",""],
+    ["O que Deus prometeu, Ele *cumpre*. Descansa.",""],
+    ["Confiar é dar o próximo passo sem ver a *escada inteira*.",""],
+    ["Eu não sei o *caminho*, mas conheço quem me *guia*.",""],
+    ["Acalma o coração: o que é seu *não passa* por você.",""],
+    ["Confiança se constrói em *gotas* e se perde em *baldes*.",""],
+    ["Acredite mais em *você*. Você já chegou *longe*.",""],
+    ["Entrega, confia, *espera*. E agradece *antes*.",""]
+  ],
+  inspiracao:[
+    ["Seja *luz* onde você estiver hoje.",""],
+    ["Pequenos *gestos* mudam *grandes* dias.",""],
+    ["Faça do seu dia algo que valha a pena *contar*.",""],
+    ["Inspire-se em quem *recomeçou*, não em quem nunca *caiu*.",""],
+    ["A vida fica mais leve quando a gente *escolhe* ver o *bonito*.",""],
+    ["Plante *gentileza*. Ela sempre *volta*.",""],
+    ["Seu jeito de tratar as pessoas é a sua *assinatura*.",""],
+    ["Hoje, faça *uma coisa* que te deixe *orgulhoso*.",""]
+  ]
+};
+
+/* ---------- Opções visuais ---------- */
+const FONTS = [
+  {id:"instrument", name:"Instrument (marca)", fam:"Instrument Serif", w:400, track:-0.012},
+  {id:"fraunces", name:"Fraunces", fam:"Fraunces", w:600, track:-0.025},
+  {id:"dmserif", name:"DM Serif", fam:"DM Serif Display", w:400, track:-0.02},
+  {id:"playfair", name:"Playfair", fam:"Playfair Display", w:700, track:-0.02},
+  {id:"bodoni", name:"Bodoni", fam:"Bodoni Moda", w:700, track:-0.02},
+  {id:"young", name:"Young", fam:"Young Serif", w:400, track:-0.025}
+];
+const BGS = [
+  {id:"branco", name:"Branco", bg:"#FFFFFF", ink:"#0A0A0A", muted:"#6B6B6B"},
+  {id:"papel", name:"Papel", bg:"#F4F0E8", ink:"#141210", muted:"#6E6860"},
+  {id:"preto", name:"Preto", bg:"#000000", ink:"#FFFFFF", muted:"#8A8A85"}
+];
+const MARKS = [
+  {id:"lima", name:"Verde da marca", c:"#D4FF3A"},
+  {id:"rosa", name:"Rosa", c:"#FFB8CB"},
+  {id:"ceu", name:"Céu", c:"#BFE3FF"},
+  {id:"pessego", name:"Pêssego", c:"#FFD2A1"}
+];
+const FORMATS = [
+  {id:"feed", name:"Feed 4:5", w:1080, h:1350},
+  {id:"quadrado", name:"Quadrado", w:1080, h:1080},
+  {id:"stories", name:"Stories", w:1080, h:1920}
+];
+const ALIGNS = [{id:"left", name:"Esquerda"},{id:"center", name:"Centro"}];
+
+const MONTHS = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+const MON3 = ["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"];
+const WD = ["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"];
+const WD3 = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+
+/* ---------- Estado ---------- */
+const $ = id => document.getElementById(id);
+const today = new Date(); today.setHours(0,0,0,0);
+const state = {
+  date: new Date(today), cat: WEEKDAY_CAT[today.getDay()],
+  text:"", author:"", edited:false,
+  font:"instrument", bg:"preto", mark:"lima", format:"feed", align:"left",
+  size:160, showDate:true, dateStyle:"a", handle:"@rumododia", caption:"",
+  weights:{fe:2, motivacao:2, conquista:2, trabalho:2, familia:1, amor:1, filosofia:1, gratidao:1, confianca:1, inspiracao:1},
+  alternate:true
+};
+const SAVED_KEYS = ["font","bg","mark","format","align","size","showDate","dateStyle","handle","weights","alternate"];
+try{
+  const s = JSON.parse(localStorage.getItem("rumododia.v3")||"{}");
+  SAVED_KEYS.forEach(k=>{ if(s[k]!==undefined) state[k]=s[k]; });
+}catch(e){}
+function persist(){
+  try{ const o={}; SAVED_KEYS.forEach(k=>o[k]=state[k]); localStorage.setItem("rumododia.v3", JSON.stringify(o)); }catch(e){}
+}
+
+/* ---------- Datas ---------- */
+const pad2 = n => String(n).padStart(2,"0");
+const isoOf = d => d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());
+function parseIso(v){ const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(v||""); if(!m) return null; const d=new Date(+m[1],+m[2]-1,+m[3]); d.setHours(0,0,0,0); return d; }
+function dateText(d, style){
+  const day=d.getDate(), mon=MONTHS[d.getMonth()], wd=WD[d.getDay()];
+  if(style==="b") return wd+", "+day+" de "+mon;
+  if(style==="c") return wd.split("-")[0].toUpperCase()+" · "+day+" "+MON3[d.getMonth()];
+  return day+" de "+mon+", "+wd;
+}
+const dayNumber = d => Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5);
+
+/* ---------- Frases ---------- */
+function phraseOfDay(){
+  const list = BANK[state.cat];
+  const i = Math.floor(dayNumber(state.date)/7) % list.length;
+  return list[i];
+}
+function setPhrase(p){
+  state.text=p[0]; state.author=p[1]||""; state.edited=false;
+  $("phrase").value=state.text; $("author").value=state.author;
+}
+function shuffle(){
+  const list = BANK[state.cat];
+  let p, tries=0;
+  do{ p=list[Math.floor(Math.random()*list.length)]; tries++; } while(p[0]===state.text && tries<10);
+  setPhrase(p);
+}
+
+/* ---------- Canvas ---------- */
+const cv = $("cv"), ctx = cv.getContext("2d");
+const hasTracking = typeof ctx.letterSpacing === "string";
+const fontCache = {};
+function ensureFont(f){
+  if(!fontCache[f.id]){
+    const q = n => document.fonts.load(n).catch(()=>null);
+    fontCache[f.id] = Promise.all([
+      q(f.w+' 100px "'+f.fam+'"'), q('400 100px "'+f.fam+'"'), q('italic 400 100px "'+f.fam+'"')
+    ]);
+  }
+  return fontCache[f.id];
+}
+function setFont(f, size, opts){
+  opts = opts||{};
+  const w = opts.weight || f.w;
+  ctx.font = (opts.italic?"italic ":"")+w+" "+size+'px "'+f.fam+'", Georgia, serif';
+  if(hasTracking) ctx.letterSpacing = (opts.track!==undefined?opts.track:f.track)*size+"px";
+}
+const mw = t => ctx.measureText(t).width;
+
+function parseRich(src){
+  const paras=[];
+  src.replace(/\r/g,"").split("\n").forEach(line=>{
+    let hl=false; const words=[]; let cur=null;
+    for(const ch of line){
+      if(ch==="*"){ hl=!hl; continue; }
+      if(/\s/.test(ch)){
+        if(cur){ words.push(cur); cur=null; }
+        if(words.length) words[words.length-1].gapHl = hl;
+        continue;
+      }
+      if(!cur) cur={segs:[], gapHl:false};
+      const last=cur.segs[cur.segs.length-1];
+      if(last && last.hl===hl) last.t+=ch; else cur.segs.push({t:ch, hl:hl});
+    }
+    if(cur) words.push(cur);
+    paras.push(words);
+  });
+  while(paras.length && !paras[paras.length-1].length) paras.pop();
+  while(paras.length && !paras[0].length) paras.shift();
+  return paras;
+}
+function layout(paras, f, fs, maxW){
+  setFont(f, fs);
+  const sp = mw(" ");
+  const lines=[];
+  paras.forEach(words=>{
+    if(!words.length){ lines.push({words:[], width:0, sp:sp}); return; }
+    let line={words:[], width:0, sp:sp};
+    words.forEach(w=>{
+      w.segs.forEach(s=>s.w=mw(s.t));
+      w.w = w.segs.reduce((a,s)=>a+s.w,0);
+      const add = line.words.length ? sp + w.w : w.w;
+      if(line.words.length && line.width + add > maxW){ lines.push(line); line={words:[w], width:w.w, sp:sp}; }
+      else { line.words.push(w); line.width += add; }
+    });
+    lines.push(line);
+  });
+  return lines;
+}
+function rng(seed){ let a=seed>>>0; return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function hash(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; }
+
+function marker(x0,x1,yt,yb,rnd){
+  const h=yb-yt, r=h*0.26, j=()=> (rnd()-0.5)*h*0.14;
+  const tl={x:x0+j(),y:yt+j()}, tr={x:x1+j(),y:yt+j()}, br={x:x1+j(),y:yb+j()}, bl={x:x0+j(),y:yb+j()};
+  ctx.beginPath();
+  ctx.moveTo(tl.x+r, tl.y);
+  ctx.quadraticCurveTo((tl.x+tr.x)/2, (tl.y+tr.y)/2+j(), tr.x-r, tr.y);
+  ctx.quadraticCurveTo(tr.x, tr.y, tr.x, tr.y+r);
+  ctx.lineTo(br.x, br.y-r);
+  ctx.quadraticCurveTo(br.x, br.y, br.x-r, br.y);
+  ctx.quadraticCurveTo((bl.x+br.x)/2, (bl.y+br.y)/2+j(), bl.x+r, bl.y);
+  ctx.quadraticCurveTo(bl.x, bl.y, bl.x, bl.y-r);
+  ctx.lineTo(tl.x, tl.y+r);
+  ctx.quadraticCurveTo(tl.x, tl.y, tl.x+r, tl.y);
+  ctx.closePath(); ctx.fill();
+}
+
+const ease = x => 1 - Math.pow(1 - x, 3);
+const easeIO = x => x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3)/2;
+const BOOK_PATH = new Path2D("M0 4 C6 0.5 12 0.5 18 3.5 V21 C12 18 6 18 0 21 Z M20 3.5 C26 0.5 32 0.5 38 4 V21 C32 18 26 18 20 21 Z");
+function drawMark(cx, base, fs, ink, accent){
+  const fam='"Instrument Serif", Georgia, serif', gap=fs*0.026;
+  if(hasTracking) ctx.letterSpacing="0px";
+  ctx.font='400 '+fs+'px '+fam; const wR=mw("R");
+  ctx.font='italic 400 '+fs+'px '+fam; const wd=mw("d");
+  const x0=cx-(wR+gap+wd)/2, xd=x0+wR+gap;
+  ctx.fillStyle=ink; ctx.font='400 '+fs+'px '+fam; ctx.fillText("R",x0,base);
+  ctx.fillStyle=accent; ctx.font='italic 400 '+fs+'px '+fam; ctx.fillText("d",xd,base);
+  const bw=fs*0.27, sc=bw/38, bh=22*sc, bx=xd+wd*0.22-bw/2, bottom=base-fs*0.79;
+  ctx.save(); ctx.translate(bx,bottom-bh); ctx.scale(sc,sc); ctx.fillStyle=accent; ctx.fill(BOOK_PATH); ctx.restore();
+}
+
+function draw(P, anim){
+  const S = P ? Object.assign({}, state, P) : state;
+  const A = anim || null;
+  const cl = v => Math.max(0, Math.min(1, v));
+  const f = FONTS.find(x=>x.id===S.font)||FONTS[0];
+  const bg = BGS.find(x=>x.id===S.bg)||BGS[0];
+  const mk = MARKS.find(x=>x.id===S.mark)||MARKS[0];
+  const fm = A ? FORMATS.find(x=>x.id==="stories") : (FORMATS.find(x=>x.id===S.format)||FORMATS[0]);
+  const W=fm.w, H=fm.h;
+  if(cv.width!==W) cv.width=W; if(cv.height!==H) cv.height=H;
+  ctx.setTransform(1,0,0,1,0,0); ctx.globalAlpha=1;
+  ctx.fillStyle=bg.bg; ctx.fillRect(0,0,W,H);
+  ctx.textBaseline="alphabetic";
+
+  /* layout */
+  const mx = W*0.13, maxW = W-2*mx;
+  const availH = Math.min(H*0.52, W*0.78);
+  const LH = 1.1;
+  const paras = parseRich(S.text||" ");
+  let fs = S.size, lines;
+  for(; fs>=34; fs-=2){
+    lines = layout(paras, f, fs, maxW);
+    if(lines.every(l=>l.width<=maxW) && lines.length*fs*LH <= availH) break;
+  }
+  if(fs<34){ fs=34; lines=layout(paras,f,fs,maxW); }
+  const lh = fs*LH;
+  const blockW = Math.max.apply(null, lines.map(l=>l.width).concat([1]));
+  const dateFs = Math.round(W*0.034);
+  const handleFs = Math.round(Math.min(Math.max(fs*0.27, W*0.024), W*0.032));
+  const authorFs = Math.round(Math.min(Math.max(fs*0.3, W*0.03), W*0.04));
+  const dTxt = dateText(S.date, S.dateStyle);
+  const author = (S.author||"").trim();
+  const handle = (S.handle||"").trim();
+
+  let total = lines.length*lh;
+  if(S.showDate) total += dateFs*1.2 + fs*0.45;
+  if(author) total += fs*0.35 + authorFs*1.1;
+  total += fs*0.22 + handleFs*1.1;
+  let y = (H-total)/2 - (A ? H*0.02 : 0);
+  const center = S.align==="center";
+  const x0 = center ? W/2 : (W-blockW)/2;
+  const ax = (w)=> center ? (W-w)/2 : x0;
+
+  const dateY = y + dateFs;
+  if(S.showDate) y = dateY + dateFs*0.2 + fs*0.45;
+
+  /* posições de cada palavra e de cada trecho com marca-texto */
+  const placed=[], runs=[];
+  let wordIdx=0;
+  lines.forEach((line,i)=>{
+    const base = y + i*lh + fs*0.8;
+    let x = ax(line.width);
+    const pieces=[];
+    line.words.forEach((w,wi)=>{
+      const id=wordIdx++;
+      w.segs.forEach(s=>{ pieces.push({x:x, w:s.w, hl:s.hl, t:s.t, wi:id}); x+=s.w; });
+      if(wi<line.words.length-1){
+        const nx=line.words[wi+1];
+        const joined = w.gapHl && w.segs[w.segs.length-1].hl && nx.segs[0].hl;
+        pieces.push({x:x, w:line.sp, hl:joined, t:null, wi:id});
+        x+=line.sp;
+      }
+    });
+    let run=null;
+    pieces.forEach(pc=>{
+      if(pc.hl){ if(!run){ run={base:base, a:pc.x, b:pc.x+pc.w, pcs:[pc]}; runs.push(run); } else { run.b=pc.x+pc.w; run.pcs.push(pc); } }
+      else run=null;
+    });
+    placed.push({base:base, pieces:pieces});
+  });
+  y += lines.length*lh;
+  const authorY = author ? y + fs*0.35 + authorFs*0.85 : y;
+  const handleY = (author ? authorY + authorFs*0.25 : y) + fs*0.22 + handleFs*0.85;
+
+  /* tempos da animação */
+  const nW = wordIdx;
+  const T0=0.55, WST=0.075, WD=0.7;
+  const TM = T0 + Math.max(0,nW-1)*WST + WD + 0.15;
+  const RST=0.32, RD=0.55;
+  const TT = TM + runs.length*RST + RD*0.6;
+  const TK = TT + 0.7;
+  draw.duration = TK + 3.4;
+  const t = A ? A.t : 1e9;
+  const pIn = (start, d) => ease(cl((t-start)/d));
+
+  if(A){
+    const z = 1 + 0.035*easeIO(cl(t/draw.duration));
+    ctx.translate(W/2, H/2); ctx.scale(z,z); ctx.translate(-W/2, -H/2);
+  }
+
+  /* data */
+  if(S.showDate){
+    const caps = S.dateStyle==="c";
+    const p = pIn(0.05, 0.8);
+    setFont(f, dateFs, {weight:400, track: caps?0.14:0});
+    ctx.globalAlpha = p; ctx.fillStyle = bg.muted;
+    ctx.fillText(dTxt, ax(mw(dTxt)), dateY + (1-p)*18);
+    ctx.globalAlpha = 1;
+  }
+
+  /* marca-texto, um trecho de cada vez */
+  ctx.fillStyle = mk.c;
+  const seed = hash(S.text+S.mark);
+  runs.forEach((r,k)=>{
+    const pr = A ? easeIO(cl((t - (TM + k*RST))/RD)) : 1;
+    r.p = pr;
+    const a = r.a - fs*0.06, b = r.b + fs*0.1;
+    r.edge = a + (b-a)*pr;
+    if(pr>0) marker(a, a+(b-a)*pr, r.base - fs*0.64, r.base + fs*0.19, rng(seed+k));
+    r.pcs.forEach(pc=>{ pc.dark = r.edge >= pc.x + pc.w*0.5; });
+  });
+
+  /* palavras: sobem e aparecem uma a uma */
+  setFont(f, fs);
+  placed.forEach(p=>{
+    p.pieces.forEach(pc=>{
+      if(!pc.t) return;
+      const q = A ? ease(cl((t - (T0 + pc.wi*WST))/WD)) : 1;
+      if(q<=0) return;
+      ctx.globalAlpha = q;
+      ctx.fillStyle = (pc.hl && pc.dark) ? "#0A0A0A" : bg.ink;
+      ctx.fillText(pc.t, pc.x, p.base + (1-q)*fs*0.28);
+    });
+  });
+  ctx.globalAlpha = 1;
+
+  /* autor e @ */
+  const pt = A ? pIn(TT, 0.7) : 1;
+  if(author){
+    const tx = "— "+author;
+    setFont(f, authorFs, {italic:true, weight:400, track:0});
+    ctx.globalAlpha = pt; ctx.fillStyle = bg.muted;
+    ctx.fillText(tx, ax(mw(tx)), authorY + (1-pt)*14);
+  }
+  if(handle){
+    setFont(f, handleFs, {weight:400, track:0});
+    ctx.globalAlpha = pt; ctx.fillStyle = bg.ink;
+    ctx.fillText(handle, ax(mw(handle)), handleY + (1-pt)*14);
+  }
+  ctx.globalAlpha = 1;
+
+  /* assinatura da marca no fim do reels */
+  if(A){
+    const pk = pIn(TK, 0.9);
+    if(pk>0){
+      ctx.globalAlpha = pk;
+      const accent = bg.id==="preto" ? mk.c : "#7FA300";
+      drawMark(W/2, H*0.875 + (1-pk)*16, 96, bg.ink, accent);
+      ctx.globalAlpha = 1;
+    }
+  }
+  ctx.setTransform(1,0,0,1,0,0);
+}
+
+let renderTimer=null, lastUrl=null, renderSeq=0, recording=false;
+function render(){
+  clearTimeout(renderTimer);
+  renderTimer = setTimeout(async ()=>{
+    if(recording) return;
+    const seq=++renderSeq;
+    const f = FONTS.find(x=>x.id===state.font)||FONTS[0];
+    await ensureFont(f);
+    if(seq!==renderSeq || recording) return;
+    draw();
+    syncMonthItem();
+    cv.toBlob(b=>{
+      if(!b || seq!==renderSeq) return;
+      const u = URL.createObjectURL(b);
+      $("preview").src = u;
+      if(lastUrl) URL.revokeObjectURL(lastUrl);
+      lastUrl = u;
+    },"image/png");
+  }, 90);
+  updateCaption();
+}
+
+/* ---------- Legenda ---------- */
+function plain(t){ return t.replace(/\*/g,"").replace(/\s*\n\s*/g," ").trim(); }
+function captionFor(S){
+  const cat = CATS.find(c=>c.id===S.cat);
+  const h = (state.handle||"").trim();
+  const tagHandle = h ? "#"+h.replace(/^@/,"") : "";
+  return dateText(S.date,"a")+"\n\n"+plain(S.text)+((S.author||"").trim()?"\n— "+S.author.trim():"")+
+    "\n\nSalve pra lembrar e mande pra alguém que precisa ler isso hoje.\n\n"+
+    [tagHandle,"#frasedodia","#reflexao","#"+(cat?cat.tag:"frases")].filter(Boolean).join(" ");
+}
+function updateCaption(){
+  const cap = captionFor(state);
+  state.caption = cap;
+  $("caption").value = cap;
+}
+
+/* ---------- UI ---------- */
+function chipGroup(el, items, key, labelFn, extra){
+  el.innerHTML="";
+  items.forEach(it=>{
+    const b=document.createElement("button");
+    b.type="button"; b.className="chip"+(extra?" "+extra:"");
+    b.setAttribute("aria-pressed", String(state[key]===it.id));
+    labelFn(b,it);
+    b.addEventListener("click",()=>{
+      state[key]=it.id;
+      el.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed", String(c===b)));
+      if(key==="cat"){ setPhrase(phraseOfDay()); updateThemeLine(); }
+      persist(); render();
+    });
+    el.appendChild(b);
+  });
+}
+function buildWeek(){
+  const el=$("week"); el.innerHTML="";
+  for(let i=0;i<7;i++){
+    const d=new Date(today); d.setDate(today.getDate()+i);
+    const b=document.createElement("button");
+    b.type="button"; b.className="day";
+    b.setAttribute("aria-pressed", String(isoOf(d)===isoOf(state.date)));
+    b.setAttribute("aria-label", dateText(d,"a"));
+    b.innerHTML="<small>"+WD3[d.getDay()]+"</small><b>"+d.getDate()+"</b>";
+    b.addEventListener("click",()=>changeDate(d));
+    el.appendChild(b);
+  }
+}
+function updateThemeLine(){
+  const auto = WEEKDAY_CAT[state.date.getDay()];
+  const ac = CATS.find(c=>c.id===auto);
+  $("themeOfDay").innerHTML = "Tema sugerido para "+WD[state.date.getDay()]+": <b>"+ac.label+"</b>";
+}
+function changeDate(d){
+  state.date = new Date(d);
+  $("date").value = isoOf(state.date);
+  if(!state.edited){
+    state.cat = WEEKDAY_CAT[state.date.getDay()];
+    chipGroup($("cats"), CATS, "cat", (b,it)=>b.textContent=it.label);
+    setPhrase(phraseOfDay());
+  }
+  buildWeek(); updateThemeLine(); render();
+}
+
+function initUI(){
+  chipGroup($("cats"), CATS, "cat", (b,it)=>b.textContent=it.label);
+  chipGroup($("fonts"), FONTS, "font", (b,it)=>{ b.textContent=it.name; b.style.fontFamily='"'+it.fam+'", serif'; b.style.fontWeight=it.w; }, "font");
+  chipGroup($("bgs"), BGS, "bg", (b,it)=>{ b.innerHTML='<span class="sw" style="background:'+it.bg+'"></span>'+it.name; });
+  chipGroup($("marks"), MARKS, "mark", (b,it)=>{ b.innerHTML='<span class="sw" style="background:'+it.c+'"></span>'+it.name; });
+  chipGroup($("formats"), FORMATS, "format", (b,it)=>b.textContent=it.name);
+  chipGroup($("aligns"), ALIGNS, "align", (b,it)=>b.textContent=it.name);
+
+  $("date").value = isoOf(state.date);
+  $("date").addEventListener("change", e=>{ const d=parseIso(e.target.value); if(d) changeDate(d); });
+  $("dateStyle").value = state.dateStyle;
+  $("dateStyle").addEventListener("change", e=>{ state.dateStyle=e.target.value; persist(); render(); });
+  $("showDate").checked = state.showDate;
+  $("showDate").addEventListener("change", e=>{ state.showDate=e.target.checked; persist(); render(); });
+  $("size").value = state.size;
+  $("size").addEventListener("input", e=>{ state.size=+e.target.value; persist(); render(); });
+  $("handle").value = state.handle;
+  $("handleTag").textContent = state.handle;
+  $("handle").addEventListener("input", e=>{ state.handle=e.target.value; $("handleTag").textContent=state.handle; persist(); render(); });
+  $("phrase").addEventListener("input", e=>{ state.text=e.target.value; state.edited=true; render(); });
+  $("author").addEventListener("input", e=>{ state.author=e.target.value; state.edited=true; render(); });
+  $("dayBtn").addEventListener("click", ()=>{ setPhrase(phraseOfDay()); render(); });
+  $("shuffleBtn").addEventListener("click", ()=>{ shuffle(); render(); });
+  $("copyBtn").addEventListener("click", async ()=>{
+    try{ await navigator.clipboard.writeText($("caption").value); say("Legenda copiada."); }
+    catch(e){ $("caption").select(); say("Não deu pra copiar automático. A legenda ficou selecionada: use Copiar do teclado."); }
+  });
+  $("caption").addEventListener("input", e=>{ state.caption=e.target.value; });
+  $("saveBtn").addEventListener("click", save);
+
+  buildWeek(); updateThemeLine();
+  setPhrase(phraseOfDay());
+  render();
+}
+
+function say(t){ $("status").textContent=t; }
+
+/* ---------- Salvar ---------- */
+let downloads=null;
+async function save(){
+  const fname = "rumododia-"+isoOf(state.date)+".png";
+  const f = FONTS.find(x=>x.id===state.font)||FONTS[0];
+  await ensureFont(f); draw();
+  const blob = await new Promise(r=>cv.toBlob(r,"image/png"));
+  if(!blob){ say("Não consegui gerar a imagem. Tente de novo."); return; }
+  if(!downloads){ say("Toque e segure a imagem acima para salvar nas Fotos."); return; }
+  try{
+    const res = await downloads.save({filename:fname, data:blob});
+    say(res && res.status==="delivered" ? "Imagem enviada." : "Imagem pronta: "+fname);
+  }catch(e){
+    const c = e && e.code;
+    if(c==="declined") say("Salvamento cancelado.");
+    else if(c==="rate_limited") say("Já tem um salvamento aberto. Espere um instante e tente de novo.");
+    else say("Não deu pra salvar por aqui. Toque e segure a imagem para salvar nas Fotos.");
+  }
+}
+
+/* ---------- IA ---------- */
+let sample=null, aiBusy=false;
+async function aiPhrase(){
+  if(!sample || aiBusy) return;
+  aiBusy=true; $("aiBtn").disabled=true; say("Criando uma frase nova…");
+  const cat = CATS.find(c=>c.id===state.cat);
+  const avoid = BANK[state.cat].map(p=>p[0].replace(/\*/g,"")).slice(0,12).join(" | ");
+  const rule = state.cat==="filosofia"
+    ? "Use uma citação real e bem documentada de um filósofo ou pensador (clássico ou contemporâneo), traduzida para o português, com o nome do autor em \"autor\". Se não tiver certeza absoluta da autoria, escreva uma frase original e deixe \"autor\" vazio."
+    : "Escreva uma frase original e deixe \"autor\" vazio. Exceção: se for um versículo bíblico real, coloque a referência em \"autor\" (ex.: Salmos 23:1).";
+  const prompt =
+    "Você escreve frases curtas para um perfil de Instagram brasileiro de frases diárias ("+(state.handle||"@rumododia")+").\n"+
+    "Tema: "+cat.label+". Data do post: "+dateText(state.date,"a")+".\n"+
+    "Regras: português do Brasil; entre 6 e 22 palavras; tom acolhedor e direto, sem exagero de autoajuda; sem emojis; sem aspas; "+
+    "marque de 1 a 3 palavras-chave com asteriscos, assim: Um passo por *dia* ainda é *avançar*.\n"+
+    rule+"\nNão repita nenhuma destas: "+avoid+"\n"+
+    'Responda apenas com JSON no formato {"frase":"...","autor":""}';
+  try{
+    const v = await sample.json(prompt);
+    const frase = v && typeof v.frase==="string" ? v.frase.trim() : "";
+    if(!frase) throw {code:"empty"};
+    setPhrase([frase, (v.autor||"").trim()]);
+    render(); say("Frase nova pronta. Edite se quiser.");
+  }catch(e){
+    const c = e && e.code;
+    if(c==="not_granted"){ $("aiBtn").hidden=true; say("A criação com IA não foi liberada nesta página."); }
+    else if(c==="rate_limited") say("Muitos pedidos seguidos. Espere um pouco e tente de novo.");
+    else say("Não consegui criar a frase agora. Tente de novo ou use Sortear outra.");
+  }finally{
+    aiBusy=false; $("aiBtn").disabled=false;
+  }
+}
+$("aiBtn").addEventListener("click", aiPhrase);
+
+/* ---------- Mês inteiro ---------- */
+let monthItems=[];
+const MAIN_CATS = CATS.map(c=>c.id);
+
+function buildWeights(){
+  const el=$("weights"); el.innerHTML="";
+  CATS.forEach(c=>{
+    const row=document.createElement("div"); row.className="wrow";
+    const name=document.createElement("span"); name.textContent=c.label;
+    const ctl=document.createElement("div"); ctl.className="ctl";
+    const minus=document.createElement("button"); minus.type="button"; minus.textContent="−"; minus.setAttribute("aria-label","Menos "+c.label);
+    const val=document.createElement("b"); val.textContent=String(state.weights[c.id]||0);
+    const plus=document.createElement("button"); plus.type="button"; plus.textContent="+"; plus.setAttribute("aria-label","Mais "+c.label);
+    const set=v=>{ state.weights[c.id]=Math.max(0,Math.min(5,v)); val.textContent=String(state.weights[c.id]); persist(); };
+    minus.addEventListener("click",()=>set((state.weights[c.id]||0)-1));
+    plus.addEventListener("click",()=>set((state.weights[c.id]||0)+1));
+    ctl.append(minus,val,plus); row.append(name,ctl); el.appendChild(row);
+  });
+}
+
+function assignThemes(n, seed){
+  let ids = MAIN_CATS.filter(id=>(state.weights[id]||0)>0);
+  if(!ids.length) ids = ["fe","motivacao","conquista","trabalho"];
+  const tot = ids.reduce((a,id)=>a+(state.weights[id]||1),0);
+  const counts = ids.map(id=>{ const e=n*(state.weights[id]||1)/tot; return {id:id, n:Math.floor(e), rem:e-Math.floor(e)}; });
+  let left = n - counts.reduce((a,c)=>a+c.n,0);
+  counts.slice().sort((a,b)=>b.rem-a.rem).forEach(c=>{ if(left>0){ c.n++; left--; } });
+  const rnd = rng(seed), out=[]; let prev=null;
+  for(let i=0;i<n;i++){
+    let cand = counts.filter(c=>c.n>0 && c.id!==prev);
+    if(!cand.length) cand = counts.filter(c=>c.n>0);
+    let best=null, bs=-1;
+    cand.forEach(c=>{ const sc=c.n + rnd()*0.9; if(sc>bs){ bs=sc; best=c; } });
+    out.push(best.id); best.n--; prev=best.id;
+  }
+  return out;
+}
+
+function itemByIso(iso){ return monthItems.find(m=>isoOf(m.date)===iso); }
+function syncMonthItem(){
+  const it = itemByIso(isoOf(state.date));
+  if(!it) return;
+  if(it.text!==state.text || it.author!==state.author || it.cat!==state.cat){
+    it.text=state.text; it.author=state.author; it.cat=state.cat; it.reel=null;
+  }
+  renderThumb(it);
+}
+function blobOf(){ return new Promise(r=>cv.toBlob(r,"image/png")); }
+async function renderThumb(it){
+  if(it.kind==="reel") draw(it,{t:1e6}); else draw(it);
+  const b=await blobOf();
+  if(it.url) URL.revokeObjectURL(it.url);
+  if(b){ it.url=URL.createObjectURL(b); const img=document.getElementById("mimg-"+isoOf(it.date)); if(img) img.src=it.url; }
+  const c=document.getElementById("mcap-"+isoOf(it.date));
+  if(c){ const cat=CATS.find(x=>x.id===it.cat); c.textContent=cat?cat.label:""; }
+  return b;
+}
+async function staticPng(it){ draw(it); return await blobOf(); }
+
+function buildMonthGrid(){
+  const g=$("monthGrid"); g.innerHTML="";
+  monthItems.forEach(it=>{
+    const iso=isoOf(it.date);
+    const card=document.createElement("div"); card.className="mday"; card.id="mday-"+iso;
+    const img=document.createElement("img"); img.id="mimg-"+iso; img.alt="Conteúdo de "+dateText(it.date,"a");
+    if(it.kind==="reel") img.className="tall";
+    const d=document.createElement("div"); d.className="d";
+    d.innerHTML=WD3[it.date.getDay()]+" "+it.date.getDate()+' <span class="badge'+(it.kind==="reel"?" reel":"")+'">'+(it.kind==="reel"?"Reels":"Post")+"</span>";
+    const c=document.createElement("div"); c.className="c"; c.id="mcap-"+iso;
+    const r=document.createElement("div"); r.className="r";
+    const e=document.createElement("button"); e.type="button"; e.className="btn"; e.textContent="Editar";
+    e.addEventListener("click",()=>editItem(it));
+    const cp=document.createElement("button"); cp.type="button"; cp.className="btn"; cp.textContent="Legenda";
+    cp.addEventListener("click",async ()=>{ try{ await navigator.clipboard.writeText(captionFor(it)); say("Legenda de "+dateText(it.date,"a")+" copiada."); }catch(err){ say("Não deu pra copiar automático."); } });
+    const k=document.createElement("button"); k.type="button"; k.className="btn"; k.textContent= it.kind==="reel" ? "Virar post" : "Virar reels";
+    k.addEventListener("click",()=>{ it.kind = it.kind==="reel" ? "static" : "reel"; it.reel=null; buildMonthGrid(); monthItems.forEach(renderThumb); updateMix(); });
+    r.append(e,cp,k); card.append(img,d,c,r); g.appendChild(card);
+  });
+}
+function updateMix(){
+  const by={}; monthItems.forEach(it=>{ by[it.cat]=(by[it.cat]||0)+1; });
+  const parts=CATS.filter(c=>by[c.id]).map(c=>c.label+" "+by[c.id]);
+  const reels=monthItems.filter(i=>i.kind==="reel").length;
+  $("monthMix").textContent = (monthItems.length-reels)+" posts e "+reels+" reels · "+parts.join(" · ");
+}
+function editItem(it){
+  document.querySelectorAll(".mday.on").forEach(x=>x.classList.remove("on"));
+  const card=document.getElementById("mday-"+isoOf(it.date)); if(card) card.classList.add("on");
+  state.date=new Date(it.date); state.cat=it.cat; state.text=it.text; state.author=it.author; state.edited=true;
+  $("date").value=isoOf(state.date); $("phrase").value=state.text; $("author").value=state.author;
+  chipGroup($("cats"), CATS, "cat", (b,x)=>b.textContent=x.label);
+  buildWeek(); updateThemeLine(); render();
+  window.scrollTo({top:0, behavior:"smooth"});
+  say("Editando "+dateText(it.date,"a")+(it.kind==="reel"?" (reels)":"")+". As mudanças ficam salvas nesse dia do mês.");
+}
+async function generateMonth(){
+  const v=$("month").value; const m=/^(\d{4})-(\d{2})$/.exec(v||"");
+  if(!m){ $("monthStatus").textContent="Escolha um mês."; return; }
+  const y=+m[1], mo=+m[2]-1, days=new Date(y,mo+1,0).getDate();
+  const seed = y*100+mo+1;
+  const cats = assignThemes(days, seed);
+  const used = {};
+  monthItems.forEach(it=>{ if(it.url) URL.revokeObjectURL(it.url); });
+  monthItems=[];
+  for(let d=1; d<=days; d++){
+    const date=new Date(y,mo,d); date.setHours(0,0,0,0);
+    const cat=cats[d-1], list=BANK[cat];
+    const k=(used[cat]=(used[cat]||0)+1)-1;
+    const p=list[(seed*7 + k) % list.length];
+    const kind = state.alternate ? (d%2===1 ? "static" : "reel") : "static";
+    monthItems.push({date:date, cat:cat, text:p[0], author:p[1]||"", kind:kind, reel:null});
+  }
+  buildMonthGrid();
+  $("monthBtn").disabled=true;
+  await ensureFont(FONTS.find(x=>x.id===state.font)||FONTS[0]); await ensureFont(FONTS[0]);
+  for(let i=0;i<monthItems.length;i++){
+    $("monthStatus").textContent="Montando "+(i+1)+" de "+monthItems.length+"…";
+    await renderThumb(monthItems[i]);
+  }
+  draw();
+  $("monthBtn").disabled=false;
+  $("monthStatus").textContent="Mês de "+MONTHS[mo]+" de "+y+" pronto.";
+  updateMix();
+  $("monthActions").hidden=false; $("zipHint").hidden=false;
+}
+function fileBase(it){ return isoOf(it.date)+"-"+WD[it.date.getDay()].split("-")[0]; }
+function captionsText(){
+  return monthItems.map(it=>"=== "+dateText(it.date,"a")+" · "+(it.kind==="reel"?"REELS":"POST")+" ===\n"+captionFor(it)).join("\n\n");
+}
+async function ensureReel(it, label){
+  if(it.reel) return it.reel;
+  it.reel = await recordReel(it, pct=>{ $("monthStatus").textContent=label+" "+pct+"%"; });
+  return it.reel;
+}
+async function zipMonth(){
+  if(!window.JSZip){ $("monthStatus").textContent="O ZIP não carregou. Use Salvar um por um."; return; }
+  if(!downloads){ $("monthStatus").textContent="O salvamento não está disponível aqui. Toque e segure cada imagem para salvar."; return; }
+  $("zipBtn").disabled=true; $("oneByOne").disabled=true;
+  try{
+    const zip=new JSZip();
+    const reels=monthItems.filter(i=>i.kind==="reel");
+    let rk=0;
+    for(let i=0;i<monthItems.length;i++){
+      const it=monthItems[i];
+      if(it.kind==="reel"){
+        rk++;
+        const r=await ensureReel(it, "Gravando reels "+rk+" de "+reels.length+" (deixe a tela aberta):");
+        zip.file(fileBase(it)+"-reels."+r.ext, r.blob);
+      } else {
+        $("monthStatus").textContent="Montando imagens: "+(i+1)+" de "+monthItems.length+"…";
+        zip.file(fileBase(it)+"-post.png", await staticPng(it));
+      }
+    }
+    zip.file("legendas.txt", captionsText());
+    draw(); render();
+    $("monthStatus").textContent="Compactando…";
+    const blob=await zip.generateAsync({type:"blob"});
+    const mo=monthItems[0].date;
+    await downloads.save({filename:"rumododia-"+mo.getFullYear()+"-"+pad2(mo.getMonth()+1)+".zip", data:blob});
+    $("monthStatus").textContent="ZIP do mês pronto.";
+  }catch(e){
+    const c=e&&e.code;
+    if(c==="declined") $("monthStatus").textContent="Download cancelado.";
+    else if(c==="no_rec") $("monthStatus").textContent="Este aparelho não grava vídeo aqui. Desmarque Alternar post e reels ou use outro navegador.";
+    else if(c==="extension_not_enabled"||c==="rejected_extension") $("monthStatus").textContent="ZIP não está liberado aqui. Use Salvar um por um.";
+    else $("monthStatus").textContent="Não deu pra baixar o ZIP. Use Salvar um por um.";
+  }finally{ $("zipBtn").disabled=false; $("oneByOne").disabled=false; recording=false; }
+}
+async function saveOneByOne(){
+  if(!downloads){ $("monthStatus").textContent="Toque e segure cada imagem para salvar nas Fotos."; return; }
+  $("zipBtn").disabled=true; $("oneByOne").disabled=true;
+  try{
+    for(let i=0;i<monthItems.length;i++){
+      const it=monthItems[i];
+      let data, name;
+      if(it.kind==="reel"){ const r=await ensureReel(it,"Gravando reels de "+dateText(it.date,"a")+":"); data=r.blob; name="rumododia-"+fileBase(it)+"-reels."+r.ext; }
+      else { data=await staticPng(it); name="rumododia-"+fileBase(it)+"-post.png"; }
+      $("monthStatus").textContent="Salvando "+(i+1)+" de "+monthItems.length+"…";
+      await downloads.save({filename:name, data:data});
+    }
+    $("monthStatus").textContent="Tudo salvo.";
+  }catch(e){
+    $("monthStatus").textContent = (e&&e.code==="no_rec") ? "Este aparelho não grava vídeo aqui." : "Parou no meio. Toque de novo para recomeçar.";
+  }finally{ draw(); render(); $("zipBtn").disabled=false; $("oneByOne").disabled=false; recording=false; }
+}
+$("monthBtn").addEventListener("click", generateMonth);
+$("zipBtn").addEventListener("click", zipMonth);
+$("oneByOne").addEventListener("click", saveOneByOne);
+$("capsBtn").addEventListener("click", async ()=>{
+  try{ await navigator.clipboard.writeText(captionsText()); $("monthStatus").textContent="Todas as legendas copiadas."; }
+  catch(e){ $("monthStatus").textContent="Não deu pra copiar automático."; }
+});
+$("alternate").checked = !!state.alternate;
+$("alternate").addEventListener("change", e=>{ state.alternate=e.target.checked; persist(); });
+buildWeights();
+(function(){ const n=new Date(today); n.setMonth(n.getMonth()+1); $("month").value=n.getFullYear()+"-"+pad2(n.getMonth()+1); })();
+
+/* ---------- Reels ---------- */
+let reelBlob=null, reelExt="mp4";
+function pickMime(){
+  if(typeof MediaRecorder==="undefined") return null;
+  const c=["video/mp4;codecs=avc1.42E01E","video/mp4","video/webm;codecs=vp9","video/webm;codecs=vp8","video/webm"];
+  for(const m of c){ try{ if(MediaRecorder.isTypeSupported(m)) return m; }catch(e){} }
+  return null;
+}
+async function recordReel(S, onProgress){
+  const mime=pickMime();
+  if(!mime || !cv.captureStream) throw {code:"no_rec"};
+  await ensureFont(FONTS.find(x=>x.id===(S.font||state.font))||FONTS[0]); await ensureFont(FONTS[0]);
+  recording=true;
+  draw(S,{t:0});
+  const dur = draw.duration || 9;
+  const stream=cv.captureStream(30);
+  const rec=new MediaRecorder(stream,{mimeType:mime, videoBitsPerSecond:5000000});
+  const chunks=[];
+  rec.ondataavailable=e=>{ if(e.data && e.data.size) chunks.push(e.data); };
+  const done=new Promise(r=>rec.onstop=r);
+  rec.start(250);
+  const t0=performance.now();
+  await new Promise(resolve=>{
+    function frame(now){
+      const t=(now-t0)/1000;
+      draw(S,{t:t});
+      if(onProgress) onProgress(Math.min(100,Math.round(t/dur*100)));
+      if(t<dur) requestAnimationFrame(frame); else resolve();
+    }
+    requestAnimationFrame(frame);
+  });
+  rec.stop(); await done;
+  stream.getTracks().forEach(tr=>tr.stop());
+  recording=false;
+  return {blob:new Blob(chunks,{type:mime.split(";")[0]}), ext: mime.indexOf("mp4")>=0 ? "mp4" : "webm"};
+}
+async function makeReel(){
+  $("reelBtn").disabled=true; $("reelSave").hidden=true;
+  try{
+    const r = await recordReel(state, pct=>{ $("reelStatus").textContent="Gravando… "+pct+"%"; });
+    reelBlob=r.blob; reelExt=r.ext;
+    const v=$("reelVideo"); if(v.src) URL.revokeObjectURL(v.src);
+    v.src=URL.createObjectURL(reelBlob); v.hidden=false;
+    $("reelSave").hidden=false;
+    $("reelStatus").textContent="Reels pronto ("+reelExt.toUpperCase()+", 1080 × 1920)."+(reelExt==="webm"?" Este navegador gravou em WebM; no iPhone pelo Safari sai em MP4.":"");
+  }catch(e){
+    $("reelStatus").textContent = (e&&e.code==="no_rec") ? "Este aparelho não consegue gravar vídeo aqui. Tente pelo Safari ou Chrome atualizado." : "Não deu pra gravar agora. Tente de novo.";
+  }finally{ recording=false; $("reelBtn").disabled=false; render(); }
+}
+$("reelBtn").addEventListener("click", makeReel);
+$("reelSave").addEventListener("click", async ()=>{
+  if(!reelBlob) return;
+  if(!downloads){ $("reelStatus").textContent="Use o menu do player para salvar o vídeo."; return; }
+  try{ await downloads.save({filename:"reels-rumododia-"+isoOf(state.date)+"."+reelExt, data:reelBlob}); $("reelStatus").textContent="Vídeo salvo."; }
+  catch(e){ const c=e&&e.code; $("reelStatus").textContent = c==="declined" ? "Salvamento cancelado." : "Não deu pra salvar o vídeo por aqui."; }
+});
+
+window.__rumo = {state:state, draw:draw, recordReel:recordReel, assignThemes:assignThemes, BANK:BANK, CATS:CATS, captionFor:captionFor, cv:cv, ensureFont:ensureFont, FONTS:FONTS, dateText:dateText, isoOf:isoOf};
+initUI();
+
+if(window.claude && typeof window.claude.use==="function"){
+  window.claude.use("downloads").then(d=>{ downloads=d||null; if(downloads) $("saveHint").textContent="Salva o PNG em 1080 px, pronto pro Instagram."; }).catch(()=>{});
+  window.claude.use("sample").then(s=>{ sample=s||null; if(sample) $("aiBtn").hidden=false; }).catch(()=>{});
+}
+})();
+</script>
+</body>
+</html>
