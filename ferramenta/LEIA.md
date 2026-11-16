@@ -7,3 +7,4 @@
 - Fonte Instrument Serif sob licença OFL (ver `ferramenta/fontes/OFL.txt`).
 - `ferramenta/frases/AAAA-MM.json`: frases novas do mês por tema (`{"fe": [["frase com *destaque*", ""], ...]}`). Quando existe, o gerador usa essas frases primeiro; só completa com o banco do estúdio se faltar.
 - `ferramenta/inspiracao.md`: o que mais engaja em perfis de frases. LEIA ANTES de escrever as frases novas de cada mês e siga as regras práticas dele.
+- No arquivo de frases do mês, a chave `_datas` fixa a frase de um dia e turno: `{"_datas": {"2026-12-25": {"manha": ["frase", "autor", "tema"], "noite": [...]}}}`. Datas fixas têm prioridade.
