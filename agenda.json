@@ -3,15 +3,19 @@
   "data": "2026-11-16",
   "turno": "manha",
   "tipo": "post",
-  "tema": "fe",
+  "tema": "conquista",
   "modelo": "marcador-preto",
-  "arquivo": "2026-11/2026-11-16-manha-post.jpg",
-  "legenda": "16 de novembro, segunda-feira\n\nPra hoje: Senhor, abençoa o começo dessa semana e não deixa faltar paz em casa.\n\nSe isso é pra você, comenta Amém 🙏 e marca quem precisa ler isso hoje.\n\nSiga @rumododia\n\n#rumododia #frasedodia #reflexao #fe",
-  "publicado": true,
-  "story": "2026-11/2026-11-16-manha-story.jpg",
-  "media_id": "18427497787153305",
-  "story_publicado": true,
-  "story_media_id": "18127723310312958"
+  "arquivo": "2026-11/2026-11-16-manha-post-v2.jpg",
+  "legenda": "16 de novembro, segunda-feira\n\nQuem me viu cair vai me ver de pé, com Deus na frente e a vitória nas mãos.\n\nSe isso é pra você, comenta Amém 🙏 e marca quem precisa ler isso hoje.\n\nSiga @rumododia\n\n#rumododia #frasedodia #reflexao #conquista",
+  "publicado": false,
+  "story": "2026-11/2026-11-16-manha-story-v2.jpg",
+  "substituido": {
+   "arquivo": "2026-11/2026-11-16-manha-post.jpg",
+   "story": "2026-11/2026-11-16-manha-story.jpg",
+   "legenda": "16 de novembro, segunda-feira\n\nPra hoje: Senhor, abençoa o começo dessa semana e não deixa faltar paz em casa.\n\nSe isso é pra você, comenta Amém 🙏 e marca quem precisa ler isso hoje.\n\nSiga @rumododia\n\n#rumododia #frasedodia #reflexao #fe",
+   "media_id": "18427497787153305",
+   "story_media_id": "18127723310312958"
+  }
  },
  {
   "data": "2026-11-17",
