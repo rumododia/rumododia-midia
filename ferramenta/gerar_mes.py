@@ -92,6 +92,12 @@ async def main():
                     "capa":f"{start[:7]}/{it['iso']}-{it['turno']}-reels-capa.jpg","thumb_offset_ms":int((r["dur"]-1)*1000),"legenda":r["cap"],"publicado":False})
             print(it["iso"], it["kind"], it["cat"], flush=True)
         await b.close()
+    # story 9:16 de cada publicação (para o dono adicionar aos destaques)
+    from PIL import Image
+    for x in novos:
+        if x["tipo"]=="reels": x["story"]=x["capa"]; continue
+        im=Image.open(ROOT/x["arquivo"]).convert("RGB"); S=Image.new("RGB",(1080,1920),im.getpixel((5,5)))
+        S.paste(im,(0,(1920-im.height)//2)); st=x["arquivo"].replace("-post.jpg","-story.jpg"); S.save(ROOT/st,quality=92); x["story"]=st
     ag_path = ROOT/"agenda.json"
     agenda = json.load(open(ag_path)) if ag_path.exists() else []
     datas = {x["data"] for x in novos}
