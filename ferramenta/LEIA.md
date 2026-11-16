@@ -6,3 +6,4 @@
 - `ferramenta/estudio.html`: cópia do Estúdio Rumo do Dia usada para desenhar as artes.
 - Fonte Instrument Serif sob licença OFL (ver `ferramenta/fontes/OFL.txt`).
 - `ferramenta/frases/AAAA-MM.json`: frases novas do mês por tema (`{"fe": [["frase com *destaque*", ""], ...]}`). Quando existe, o gerador usa essas frases primeiro; só completa com o banco do estúdio se faltar.
+- `ferramenta/inspiracao.md`: o que mais engaja em perfis de frases. LEIA ANTES de escrever as frases novas de cada mês e siga as regras práticas dele.
