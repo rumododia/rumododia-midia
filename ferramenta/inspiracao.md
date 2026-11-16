@@ -22,3 +22,12 @@ Use isto ao escrever as frases novas de cada mês. Nunca copie frases de outros 
 
 ## Observação
 Esses perfis publicam a arte parada como reels, com música gospel/worship em alta. A publicação automática não consegue colocar música da biblioteca do Instagram; se o dono quiser, ele pode publicar alguns desses manualmente com música.
+
+## Mais padrões (prints de 16/11/2026)
+- Oração coletiva em "nós" ("que sejamos...") e proteção direta ("Deus te livra de todo mal"): muito compartilhada, mais envios que curtidas.
+- Atitude + fé: frase firme, em primeira pessoa, que a pessoa reposta como posicionamento.
+- Identificação com a época ("eu amo dezembro, amo o Natal..."), em primeira pessoa.
+- Data curta no topo ("14/11") também funciona.
+- Carrossel com nomes para o Ano Novo ("O 2027 de [nome]"): uma página por nome comum, com uma bênção para o ano; muitos comentários com nomes e envios. Bom para a última semana de dezembro.
+- Conteúdo útil para salvar (ex.: lista de feriados do ano seguinte) gera muitos salvamentos e envios; publicar entre fim de novembro e dezembro.
+- Legenda: repetir a frase e expandir com "Reflexão:" em 2 a 3 linhas.

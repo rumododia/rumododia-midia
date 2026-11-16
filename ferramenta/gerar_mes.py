@@ -1,5 +1,6 @@
 """Gera os posts e reels de um período e atualiza a agenda.json.
 Uso: python3 ferramenta/gerar_mes.py AAAA-MM-DD NUM_DIAS
+Gera 2 publicações por dia: post estático (turno "manha", 6h) e reels (turno "noite", 19h), com temas diferentes.
 Precisa de: playwright (python), google-chrome, ffmpeg."""
 import asyncio, base64, json, os, subprocess, sys, pathlib
 from playwright.async_api import async_playwright
@@ -19,15 +20,15 @@ async ({start, n, pesos, frases}) => {
   R.state.bg = 'preto';
   const [y,m,d] = start.split('-').map(Number);
   const seed = y*100+m+d;
-  const cats = R.assignThemes(n, seed);
+  const cats = R.assignThemes(2*n, seed);   // 2 por dia: post (manhã) e reels (noite), temas diferentes
   const used = {}; const items = [];
-  for (let i=0;i<n;i++){
-    const date = new Date(y, m-1, d+i); date.setHours(0,0,0,0);
+  for (let i=0;i<2*n;i++){
+    const date = new Date(y, m-1, d+Math.floor(i/2)); date.setHours(0,0,0,0);
     const cat = cats[i];
     const k = (used[cat]=(used[cat]||0)+1)-1;
     const novas = (frases && frases[cat]) || [];
     const p = k < novas.length ? novas[k] : R.BANK[cat][(seed*7+k) % R.BANK[cat].length];
-    items.push({iso: R.isoOf(date), cat, text:p[0], author:p[1]||"", kind: i%2===0?"static":"reel"});
+    items.push({iso: R.isoOf(date), cat, text:p[0], author:p[1]||"", kind: i%2===0?"static":"reel", turno: i%2===0?"manha":"noite"});
   }
   return items;
 }"""
@@ -66,7 +67,7 @@ async def main():
             if it["kind"]=="static":
                 r = await pg.evaluate(JS_STATIC, it)
                 (mes_dir/f"{it['iso']}-post.jpg").write_bytes(base64.b64decode(r["img"].split(",")[1]))
-                novos.append({"data":it["iso"],"tipo":"post","tema":it["cat"],"arquivo":f"{start[:7]}/{it['iso']}-post.jpg","legenda":r["cap"],"publicado":False})
+                novos.append({"data":it["iso"],"turno":it["turno"],"tipo":"post","tema":it["cat"],"arquivo":f"{start[:7]}/{it['iso']}-post.jpg","legenda":r["cap"],"publicado":False})
             else:
                 r = await pg.evaluate(JS_REEL, it)
                 raw = mes_dir/f"{it['iso']}-raw.{r['ext']}"; raw.write_bytes(base64.b64decode(r["vid"]))
@@ -76,7 +77,7 @@ async def main():
                     "-c:a","aac","-b:a","128k","-movflags","+faststart",str(mp4)], check=True)
                 raw.unlink()
                 (mes_dir/f"{it['iso']}-reels-capa.jpg").write_bytes(base64.b64decode(r["cover"].split(",")[1]))
-                novos.append({"data":it["iso"],"tipo":"reels","tema":it["cat"],"arquivo":f"{start[:7]}/{it['iso']}-reels.mp4",
+                novos.append({"data":it["iso"],"turno":it["turno"],"tipo":"reels","tema":it["cat"],"arquivo":f"{start[:7]}/{it['iso']}-reels.mp4",
                     "capa":f"{start[:7]}/{it['iso']}-reels-capa.jpg","thumb_offset_ms":int((r["dur"]-1)*1000),"legenda":r["cap"],"publicado":False})
             print(it["iso"], it["kind"], it["cat"], flush=True)
         await b.close()
@@ -84,6 +85,6 @@ async def main():
     agenda = json.load(open(ag_path)) if ag_path.exists() else []
     datas = {x["data"] for x in novos}
     agenda = [x for x in agenda if x["data"] not in datas] + novos
-    agenda.sort(key=lambda x: x["data"])
+    agenda.sort(key=lambda x: (x["data"], 0 if x.get("turno","manha")=="manha" else 1))
     json.dump(agenda, open(ag_path,"w"), ensure_ascii=False, indent=1)
 asyncio.run(main())

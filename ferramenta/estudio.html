@@ -728,7 +728,8 @@ function captionFor(S){
   const h = (state.handle||"").trim();
   const tagHandle = h ? "#"+h.replace(/^@/,"") : "";
   return dateText(S.date,"a")+"\n\n"+plain(S.text)+((S.author||"").trim()?"\n— "+S.author.trim():"")+
-    "\n\nSalve pra lembrar e mande pra alguém que precisa ler isso hoje.\n\n"+
+    "\n\nSe isso é pra você, comenta Amém 🙏 e marca quem precisa ler isso hoje.\n\n"+
+    (h ? "Siga "+h+"\n\n" : "")+
     [tagHandle,"#frasedodia","#reflexao","#"+(cat?cat.tag:"frases")].filter(Boolean).join(" ");
 }
 function updateCaption(){
