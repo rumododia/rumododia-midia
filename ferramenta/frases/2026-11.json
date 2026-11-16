@@ -1,61 +1,193 @@
 {
  "fe": [
-  ["Um dia você vai olhar pra trás e *agradecer* por cada porta que Deus *fechou*.", ""],
-  ["Pra hoje:\nSenhor, guarda a minha *casa*, a minha *mente* e o meu *coração*.", ""],
-  ["Eu não sei como, mas sei *Quem*. E isso me *basta*.", ""],
-  ["Quando ninguém entendeu o seu choro, *Deus* entendeu a sua *oração*.", ""],
-  ["Pra hoje:\nQue Deus afaste de nós tudo o que não vem *dEle*.", ""],
-  ["Ainda vão perguntar como você *conseguiu*. Responda: foi *Deus*.", ""],
-  ["Ore até o *medo* virar *paz*.", ""],
-  ["Deus não esqueceu de você. Ele está *preparando* o que você *pediu*.", ""]
+  [
+   "Um dia você vai olhar pra trás e *agradecer* por cada porta que Deus *fechou*.",
+   ""
+  ],
+  [
+   "Pra hoje:\nSenhor, guarda a minha *casa*, a minha *mente* e o meu *coração*.",
+   ""
+  ],
+  [
+   "Eu não sei como, mas sei *Quem*. E isso me *basta*.",
+   ""
+  ],
+  [
+   "Quando ninguém entendeu o seu choro, *Deus* entendeu a sua *oração*.",
+   ""
+  ],
+  [
+   "Pra hoje:\nQue Deus afaste de nós tudo o que não vem *dEle*.",
+   ""
+  ],
+  [
+   "Ainda vão perguntar como você *conseguiu*. Responda: foi *Deus*.",
+   ""
+  ],
+  [
+   "Ore até o *medo* virar *paz*.",
+   ""
+  ],
+  [
+   "Deus não esqueceu de você. Ele está *preparando* o que você *pediu*.",
+   ""
+  ]
  ],
  "conquista": [
-  ["Conquistei devagar, de *joelhos* e de *cabeça erguida*.", ""],
-  ["Tudo que eu tenho veio do *esforço* e da *graça* de Deus.", ""],
-  ["Não foi sorte. Foi *madrugada*, *oração* e muita *vontade*.", ""],
-  ["Um dia a sua vitória vai *inspirar* alguém que hoje está *desistindo*.", ""],
-  ["Quem *planta* em silêncio *colhe* sem precisar provar nada.", ""],
-  ["O que é seu ninguém *tira*. O que não é, Deus *afasta*.", ""]
+  [
+   "Conquistei devagar, de *joelhos* e de *cabeça erguida*.",
+   ""
+  ],
+  [
+   "Tudo que eu tenho veio do *esforço* e da *graça* de Deus.",
+   ""
+  ],
+  [
+   "Não foi sorte. Foi *madrugada*, *oração* e muita *vontade*.",
+   ""
+  ],
+  [
+   "Um dia a sua vitória vai *inspirar* alguém que hoje está *desistindo*.",
+   ""
+  ],
+  [
+   "Quem *planta* em silêncio *colhe* sem precisar provar nada.",
+   ""
+  ],
+  [
+   "O que é seu ninguém *tira*. O que não é, Deus *afasta*.",
+   ""
+  ]
  ],
  "trabalho": [
-  ["Trabalhe calado, ore em segredo e deixe Deus *mostrar* o *resultado*.", ""],
-  ["Acordar cansado e ir mesmo assim também é *fé*.", ""],
-  ["Honre o seu trabalho, mesmo o *pequeno*. Deus vê quem é *fiel* no pouco.", ""],
-  ["Hoje eu não vou *reclamar*. Vou *agradecer* e fazer o meu melhor.", ""],
-  ["Cada conta paga é uma *vitória* que ninguém *aplaude*.", ""]
+  [
+   "Trabalhe calado, ore em segredo e deixe Deus *mostrar* o *resultado*.",
+   ""
+  ],
+  [
+   "Acordar cansado e ir mesmo assim também é *fé*.",
+   ""
+  ],
+  [
+   "Honre o seu trabalho, mesmo o *pequeno*. Deus vê quem é *fiel* no pouco.",
+   ""
+  ],
+  [
+   "Hoje eu não vou *reclamar*. Vou *agradecer* e fazer o meu melhor.",
+   ""
+  ],
+  [
+   "Cada conta paga é uma *vitória* que ninguém *aplaude*.",
+   ""
+  ]
  ],
  "motivacao": [
-  ["Você não chegou até aqui pra *desistir* agora.", ""],
-  ["Respira. Isso também vai *passar*, e você vai sair mais *forte*.", ""],
-  ["Nunca subestime quem *recomeçou* do *zero*.", ""],
-  ["Seja o motivo de alguém *acreditar* de novo.", ""],
-  ["Devagar ainda é *caminho*. Parado é que não se *chega*.", ""]
+  [
+   "Você não chegou até aqui pra *desistir* agora.",
+   ""
+  ],
+  [
+   "Respira. Isso também vai *passar*, e você vai sair mais *forte*.",
+   ""
+  ],
+  [
+   "Nunca subestime quem *recomeçou* do *zero*.",
+   ""
+  ],
+  [
+   "Seja o motivo de alguém *acreditar* de novo.",
+   ""
+  ],
+  [
+   "Devagar ainda é *caminho*. Parado é que não se *chega*.",
+   ""
+  ]
  ],
  "confianca": [
-  ["Eu não sei o que vem pela frente, mas sei quem vai *comigo*.", ""],
-  ["Calma: o que Deus *prometeu*, o tempo não *cancela*.", ""],
-  ["Confia. Nem todo *atraso* é um *não*.", ""],
-  ["Pra hoje:\nSenhor, me dá *paciência* pra esperar o Teu *tempo*.", ""],
-  ["Solta o *controle*. Deus está *cuidando*.", ""]
+  [
+   "Eu não sei o que vem pela frente, mas sei quem vai *comigo*.",
+   ""
+  ],
+  [
+   "Calma: o que Deus *prometeu*, o tempo não *cancela*.",
+   ""
+  ],
+  [
+   "Confia. Nem todo *atraso* é um *não*.",
+   ""
+  ],
+  [
+   "Pra hoje:\nSenhor, me dá *paciência* pra esperar o Teu *tempo*.",
+   ""
+  ],
+  [
+   "Solta o *controle*. Deus está *cuidando*.",
+   ""
+  ]
  ],
  "familia": [
-  ["Que nunca falte *mesa cheia* e *abraço apertado* na nossa casa.", ""],
-  ["Família é quem fica *perto* quando o mundo vai *embora*.", ""],
-  ["Pra hoje:\nSenhor, protege cada pessoa que mora no meu *coração*.", ""]
+  [
+   "Que nunca falte *mesa cheia* e *abraço apertado* na nossa casa.",
+   ""
+  ],
+  [
+   "Família é quem fica *perto* quando o mundo vai *embora*.",
+   ""
+  ],
+  [
+   "Pra hoje:\nSenhor, protege cada pessoa que mora no meu *coração*.",
+   ""
+  ]
  ],
  "amor": [
-  ["Amor de verdade *cuida*, *respeita* e não te faz *duvidar*.", ""],
-  ["Que eu nunca esqueça de *agradecer* por quem *escolheu* ficar.", ""],
-  ["Quem te ama de verdade *torce* por você até quando você não *vê*.", ""]
+  [
+   "Amor de verdade *cuida*, *respeita* e não te faz *duvidar*.",
+   ""
+  ],
+  [
+   "Que eu nunca esqueça de *agradecer* por quem *escolheu* ficar.",
+   ""
+  ],
+  [
+   "Quem te ama de verdade *torce* por você até quando você não *vê*.",
+   ""
+  ]
  ],
  "gratidao": [
-  ["Olha quanto você já *venceu*. Agradeça antes de *pedir* de novo.", ""],
-  ["Obrigado, Deus, pelo que eu *tenho* e pelo que eu *não perdi*.", ""],
-  ["Gratidão por estar *vivo* pra *tentar* de novo hoje.", ""]
+  [
+   "Olha quanto você já *venceu*. Agradeça antes de *pedir* de novo.",
+   ""
+  ],
+  [
+   "Obrigado, Deus, pelo que eu *tenho* e pelo que eu *não perdi*.",
+   ""
+  ],
+  [
+   "Gratidão por estar *vivo* pra *tentar* de novo hoje.",
+   ""
+  ]
  ],
  "inspiracao": [
-  ["Seja a *paz* que você queria *encontrar*.", ""],
-  ["Gentileza ainda *abre* mais portas que *grito*.", ""],
-  ["Um dia bom pode começar com um *bom-dia* sincero.", ""]
- ]
+  [
+   "Seja a *paz* que você queria *encontrar*.",
+   ""
+  ],
+  [
+   "Gentileza ainda *abre* mais portas que *grito*.",
+   ""
+  ],
+  [
+   "Um dia bom pode começar com um *bom-dia* sincero.",
+   ""
+  ]
+ ],
+ "_datas": {
+  "2026-11-16": {
+   "manha": [
+    "Pra hoje:\nSenhor, abençoa o *começo dessa semana* e não deixa faltar *paz* em casa.",
+    "",
+    "fe"
+   ]
+  }
+ }
 }
