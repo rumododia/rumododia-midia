@@ -7,10 +7,13 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 FER = ROOT/"ferramenta"
 start, n = sys.argv[1], int(sys.argv[2])
 pesos = json.load(open(FER/"pesos.json"))
+# Frases novas do mês (opcional): ferramenta/frases/AAAA-MM.json = {"tema": [["frase com *destaque*", "autor ou vazio"], ...]}
+fr_path = FER/"frases"/f"{start[:7]}.json"
+frases = json.load(open(fr_path)) if fr_path.exists() else {}
 mes_dir = ROOT/start[:7]; mes_dir.mkdir(exist_ok=True)
 CHROME = os.environ.get("CHROME", "/usr/bin/google-chrome")
 JS_ITEMS = r"""
-async ({start, n, pesos}) => {
+async ({start, n, pesos, frases}) => {
   const R = window.__rumo;
   Object.assign(R.state.weights, pesos);
   R.state.bg = 'preto';
@@ -20,9 +23,10 @@ async ({start, n, pesos}) => {
   const used = {}; const items = [];
   for (let i=0;i<n;i++){
     const date = new Date(y, m-1, d+i); date.setHours(0,0,0,0);
-    const cat = cats[i], list = R.BANK[cat];
+    const cat = cats[i];
     const k = (used[cat]=(used[cat]||0)+1)-1;
-    const p = list[(seed*7+k) % list.length];
+    const novas = (frases && frases[cat]) || [];
+    const p = k < novas.length ? novas[k] : R.BANK[cat][(seed*7+k) % R.BANK[cat].length];
     items.push({iso: R.isoOf(date), cat, text:p[0], author:p[1]||"", kind: i%2===0?"static":"reel"});
   }
   return items;
@@ -55,7 +59,7 @@ async def main():
         await pg.add_style_tag(content=FONT_CSS)
         await pg.evaluate("Promise.all([document.fonts.load('400 100px \"Instrument Serif\"'),document.fonts.load('italic 400 100px \"Instrument Serif\"')])")
         assert await pg.evaluate("document.fonts.check('400 100px \"Instrument Serif\"')"), "fonte não carregou"
-        items = await pg.evaluate(JS_ITEMS, {"start":start, "n":n, "pesos":pesos})
+        items = await pg.evaluate(JS_ITEMS, {"start":start, "n":n, "pesos":pesos, "frases":frases})
         novos = []
         for it in items:
             base = mes_dir/it["iso"]
