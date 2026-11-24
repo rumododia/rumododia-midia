@@ -359,6 +359,17 @@
  },
  {
   "data": "2026-11-24",
+  "turno": "extra",
+  "tipo": "post",
+  "tema": "fe",
+  "modelo": "referencia-branco",
+  "arquivo": "2026-11/2026-11-24-extra-post.jpg",
+  "legenda": "Se Deus está, nada me falta. 🙏",
+  "publicado": true,
+  "media_id": "18111662159277167"
+ },
+ {
+  "data": "2026-11-24",
   "turno": "tarde",
   "tipo": "reels",
   "tema": "fe",
