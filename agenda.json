@@ -370,6 +370,17 @@
  },
  {
   "data": "2026-11-24",
+  "turno": "extra",
+  "tipo": "post",
+  "tema": "fe",
+  "modelo": "referencia-branco",
+  "arquivo": "2026-11/2026-11-24-extra2-post.jpg",
+  "legenda": "Que falte tudo, menos Deus. 🙏",
+  "publicado": true,
+  "media_id": "18118730509831093"
+ },
+ {
+  "data": "2026-11-24",
   "turno": "tarde",
   "tipo": "reels",
   "tema": "fe",
